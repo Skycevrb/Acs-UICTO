@@ -1,0 +1,1954 @@
+  body {
+      font-family: var(--font-body);
+      background-color: var(--clr-bg);
+      color: var(--clr-text);
+      line-height: 1.7;
+      /* Prevent horizontal scroll caused by animations */
+      overflow-x: hidden;
+    }
+
+    /* Smooth image rendering */
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* Remove default list styles */
+    ul, ol {
+      list-style: none;
+    }
+
+    /* Remove default link styles */
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ─── UTILITY CLASSES ────────────────────────────────────────
+       Reusable helper classes — the same concept as Git modules:
+       write once, use everywhere.
+       ──────────────────────────────────────────────────────────── */
+
+    /* Centred content container with max-width */
+    .container {
+      width: 90%;
+      max-width: var(--max-width);
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Section vertical padding */
+    .section {
+      padding: var(--space-3xl) 0;
+    }
+
+    /* Section headings */
+    .section-label {
+      font-family: var(--font-code);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--clr-cyan);
+      margin-bottom: var(--space-sm);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 3rem); /* Fluid typography — scales with viewport */
+      font-weight: 800;
+      color: var(--clr-heading);
+      margin-bottom: var(--space-md);
+      line-height: 1.15;
+    }
+
+    .section-subtitle {
+      font-size: 1.05rem;
+      color: var(--clr-text-muted);
+      max-width: 600px;
+      margin-bottom: var(--space-2xl);
+    }
+
+    /* Highlight text in cyan */
+    .accent {
+      color: var(--clr-cyan);
+    }
+
+    /* Highlight text in green */
+    .accent-green {
+      color: var(--clr-green);
+    }
+
+    /* Monospace inline code span */
+    .code-inline {
+      font-family: var(--font-code);
+      font-size: 0.85em;
+      color: var(--clr-cyan);
+      background: var(--clr-cyan-dim);
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    /* Horizontal divider line */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--clr-border), transparent);
+      margin: var(--space-xl) 0;
+    }
+
+    /* Grid of cards */
+    .card-grid {
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    /* ─── CSS CUSTOM PROPERTIES (Design Tokens) ───────────────────
+       Using CSS variables means we can change the entire colour scheme
+       by editing just these lines. This is the same principle as
+       environment variables in code — one source of truth.
+       ──────────────────────────────────────────────────────────── */
+    :root {
+      /* Primary brand colours — dark military/tech aesthetic */
+      --clr-bg:           #050a0f;        /* Main page background — near black */
+      --clr-bg-2:         #0a1520;        /* Card backgrounds */
+      --clr-bg-3:         #0f1e2e;        /* Slightly lighter panel bg */
+      --clr-border:       #1a3a5c;        /* Subtle border colour */
+      --clr-border-glow:  #00d4ff;        /* Glowing accent border */
+
+      /* Text colours */
+      --clr-text:         #c8d8e8;        /* Main body text — off-white */
+      --clr-text-muted:   #607080;        /* Secondary/placeholder text */
+      --clr-heading:      #f0f8ff;        /* Heading text — bright white */
+
+      /* Brand accent colours */
+      --clr-cyan:         #00d4ff;        /* Primary accent — electric cyan */
+      --clr-cyan-dim:     rgba(0, 212, 255, 0.12); /* Transparent cyan for glows */
+      --clr-green:        #00ff9d;        /* Success / git add colour */
+      --clr-green-dim:    rgba(0, 255, 157, 0.12);
+      --clr-orange:       #ff6b35;        /* Warning / danger colour */
+      --clr-orange-dim:   rgba(255, 107, 53, 0.12);
+      --clr-purple:       #a855f7;        /* Branch colour */
+      --clr-purple-dim:   rgba(168, 85, 247, 0.12);
+      --clr-yellow:       #ffd60a;        /* Commit hash colour */
+
+      /* Typography scale */
+      --font-display:     'Syne', sans-serif;         /* Headings */
+      --font-body:        'Outfit', sans-serif;        /* Body text */
+      --font-code:        'JetBrains Mono', monospace; /* Code blocks */
+
+      /* Spacing scale */
+      --space-xs:  0.25rem;   /*  4px */
+      --space-sm:  0.5rem;    /*  8px */
+      --space-md:  1rem;      /* 16px */
+      --space-lg:  1.5rem;    /* 24px */
+      --space-xl:  2rem;      /* 32px */
+      --space-2xl: 3rem;      /* 48px */
+      --space-3xl: 5rem;      /* 80px */
+
+      /* Border radius */
+      --radius-sm:  4px;
+      --radius-md:  8px;
+      --radius-lg:  12px;
+      --radius-xl:  20px;
+
+      /* Transition speed */
+      --transition: 0.3s ease;
+
+      /* Maximum content width */
+      --max-width: 1200px;
+    }
+
+    /* ─── CSS RESET & BASE STYLES ────────────────────────────────
+       Removes browser default margins/padding so we start with
+       a clean, consistent slate across all browsers.
+       ──────────────────────────────────────────────────────────── */
+    *, *::before, *::after {
+      box-sizing: border-box; /* Padding/border included in element width */
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      /* Smooth scrolling when clicking anchor links */
+      scroll-behavior: smooth;
+      /* Base font size — all rem units are relative to this */
+      font-size: 16px;
+    }
+
+  
+
+    .card-grid--2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+    .card-grid--3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .card-grid--4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+    /* Standard card component */
+    .card {
+      background: var(--clr-bg-2);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      transition: border-color var(--transition), transform var(--transition),
+                  box-shadow var(--transition);
+    }
+
+    .card:hover {
+      border-color: var(--clr-cyan);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 212, 255, 0.08);
+    }
+
+    /* Button styles */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 0.75rem 1.75rem;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+      border: none;
+      white-space: nowrap;
+    }
+
+    /* Primary filled button */
+    .btn-primary {
+      background: var(--clr-cyan);
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      background: #fff;
+      box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    /* Outlined ghost button */
+    .btn-outline {
+      background: transparent;
+      color: var(--clr-cyan);
+      border: 1px solid var(--clr-cyan);
+    }
+
+    .btn-outline:hover {
+      background: var(--clr-cyan-dim);
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+    }
+
+    /* Green button for join/sign-up actions */
+    .btn-green {
+      background: var(--clr-green);
+      color: #000;
+    }
+
+    .btn-green:hover {
+      background: #fff;
+      box-shadow: 0 0 30px rgba(0, 255, 157, 0.5);
+      transform: translateY(-2px);
+    }
+
+    /* ─── ANIMATED BACKGROUND GRID ───────────────────────────────
+       Creates the subtle grid texture visible on the hero section.
+       Uses CSS background-image with SVG-encoded data URI.
+       ──────────────────────────────────────────────────────────── */
+    .bg-grid {
+      position: fixed;  /* Fixed so it stays behind everything while scrolling */
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none; /* Allows clicks to pass through */
+      z-index: 0;
+      opacity: 0.03;
+      /* SVG grid pattern encoded as data URI */
+      background-image:
+        linear-gradient(var(--clr-cyan) 1px, transparent 1px),
+        linear-gradient(90deg, var(--clr-cyan) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+
+    /* Ensure all sections appear above the background grid */
+    header, nav, section, footer, main {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─── NAVIGATION BAR ─────────────────────────────────────────
+       Fixed at top, becomes opaque on scroll (via JS class toggle)
+       ──────────────────────────────────────────────────────────── */
+    .navbar {
+      position: fixed;  /* Stays at top while page scrolls */
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000; /* Above all other elements */
+      padding: var(--space-md) 0;
+      transition: background var(--transition), backdrop-filter var(--transition),
+                  border-color var(--transition);
+      border-bottom: 1px solid transparent;
+    }
+
+    /* Class added by JS when user scrolls down — adds blur background */
+    .navbar.scrolled {
+      background: rgba(5, 10, 15, 0.92);
+      backdrop-filter: blur(20px);
+      border-bottom-color: var(--clr-border);
+    }
+
+    /* Navbar inner layout */
+    .navbar__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Logo / brand mark */
+    .navbar__logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    /* The shield icon in the logo */
+    .navbar__logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--clr-cyan), var(--clr-green));
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: #000;
+      font-weight: 700;
+    }
+
+    /* Brand name text */
+    .navbar__brand {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--clr-heading);
+      line-height: 1.1;
+    }
+
+    .navbar__brand span {
+      display: block;
+      font-family: var(--font-code);
+      font-size: 0.65rem;
+      font-weight: 400;
+      color: var(--clr-text-muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* Desktop navigation links */
+    .navbar__links {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xl);
+    }
+
+    .navbar__links a {
+      font-family: var(--font-code);
+      font-size: 0.85rem;
+      color: var(--clr-text-muted);
+      transition: color var(--transition);
+      letter-spacing: 0.05em;
+    }
+
+    .navbar__links a:hover,
+    .navbar__links a.active {
+      color: var(--clr-cyan);
+    }
+
+    /* CTA button in navbar */
+    .navbar__cta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    /* ─── HAMBURGER MENU (Mobile) ─────────────────────────────── */
+    /* Hidden on desktop, shown on mobile via media query */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .hamburger__line {
+      width: 24px;
+      height: 2px;
+      background: var(--clr-text);
+      transition: all var(--transition);
+      border-radius: 2px;
+    }
+
+    /* Hamburger → X animation when menu is open */
+    .hamburger.open .hamburger__line:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+    .hamburger.open .hamburger__line:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.open .hamburger__line:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* Mobile navigation drawer */
+    .mobile-nav {
+      display: none; /* Hidden by default */
+      position: fixed;
+      top: 70px;
+      left: 0;
+      right: 0;
+      background: rgba(5, 10, 15, 0.97);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--clr-border);
+      padding: var(--space-xl);
+      z-index: 999;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+
+    .mobile-nav.open {
+      display: flex;
+    }
+
+    .mobile-nav a {
+      font-family: var(--font-code);
+      font-size: 1rem;
+      color: var(--clr-text);
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--clr-border);
+      transition: color var(--transition);
+    }
+
+    .mobile-nav a:hover {
+      color: var(--clr-cyan);
+    }
+
+    /* ─── HERO SECTION ───────────────────────────────────────────
+       Full-viewport height landing section with animated elements
+       ──────────────────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh; /* Full viewport height */
+      display: flex;
+      align-items: center;
+      padding-top: 80px; /* Offset for fixed navbar */
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative glow orbs in the hero background */
+    .hero::before,
+    .hero::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px); /* Soft glow effect */
+      pointer-events: none;
+    }
+
+    /* Top-right cyan glow */
+    .hero::before {
+      width: 600px;
+      height: 600px;
+      background: rgba(0, 212, 255, 0.06);
+      top: -100px;
+      right: -200px;
+    }
+
+    /* Bottom-left green glow */
+    .hero::after {
+      width: 400px;
+      height: 400px;
+      background: rgba(0, 255, 157, 0.05);
+      bottom: -100px;
+      left: -100px;
+    }
+
+    /* Two-column hero layout */
+    .hero__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3xl);
+      align-items: center;
+      width: 100%;
+    }
+
+    /* Left column — text content */
+    .hero__content
+
+    /* Small badge above the main heading */
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      background: var(--clr-cyan-dim);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-family: var(--font-code);
+      font-size: 0.75rem;
+      color: var(--clr-cyan);
+      margin-bottom: var(--space-lg);
+      /* Fade-in animation */
+      animation: fadeUp 0.8s ease 0.1s both;
+    }
+
+    /* Pulsing green dot — indicates "live / active" */
+    .hero__badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--clr-green);
+      border-radius: 50%;
+      animation: pulse 2s ease infinite;
+    }
+
+    /* Main hero heading */
+    .hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      color: var(--clr-heading);
+      line-height: 1.1;
+      margin-bottom: var(--space-lg);
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+
+    /* Cyan gradient text on key words */
+    .hero__title .gradient-text {
+      background: linear-gradient(135deg, var(--clr-cyan) 0%, var(--clr-green) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero__subtitle {
+      font-size: 1.1rem;
+      color: var(--clr-text-muted);
+      max-width: 520px;
+      margin-bottom: var(--space-xl);
+      line-height: 1.8;
+      animation: fadeUp 0.8s ease 0.3s both;
+    }
+
+    /* Hero CTA buttons row */
+    .hero__actions {
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s ease 0.4s both;
+    }
+
+    /* Hero stats row */
+    .hero__stats {
+      display: flex;
+      gap: var(--space-2xl);
+      margin-top: var(--space-2xl);
+      animation: fadeUp 0.8s ease 0.5s both;
+    }
+
+    .hero__stat-number {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--clr-cyan);
+      line-height: 1;
+    }
+
+    .hero__stat-label {
+      font-size: 0.8rem;
+      color: var(--clr-text-muted);
+      font-family: var(--font-code);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── GIT TERMINAL WIDGET (Right column of Hero) ────────────
+       Simulates a terminal showing live git commands running.
+       This is the key teaching tool of the hero section.
+       ──────────────────────────────────────────────────────────── */
+    .terminal-widget {
+      background: #0d1117; /* GitHub dark terminal colour */
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.03);
+      animation: fadeUp 0.8s ease 0.3s both;
+      font-family: var(--font-code);
+    }
+
+    /* Terminal title bar (like macOS window chrome) */
+    .terminal-widget__bar {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 12px 16px;
+      background: #161b22;
+      border-bottom: 1px solid var(--clr-border);
+    }
+
+    /* macOS-style traffic light dots */
+    .terminal-widget__dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+        
+
+    .terminal-widget__dot--red    { background: #ff5f57; }
+    .terminal-widget__dot--yellow { background: #febc2e; }
+    .terminal-widget__dot--green  { background: #28c840; }
+
+    /* Terminal title text */
+    .terminal-widget__title {
+      font-size: 0.75rem;
+      color: var(--clr-text-muted);
+      margin-left: auto;
+      margin-right: auto;
+      letter-spacing: 0.05em;
+    }
+
+    /* The scrollable code area */
+    .terminal-widget__body {
+      padding: var(--space-lg);
+      min-height: 320px;
+      font-size: 0.82rem;
+      line-height: 1.8;
+    }
+
+    /* Individual line in the terminal */
+    .terminal-line {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    /* The $ prompt symbol */
+    .terminal-line .prompt {
+      color: var(--clr-green);
+      user-select: none; /* User can't accidentally select the prompt */
+      flex-shrink: 0;
+    }
+
+    /* Git command text */
+    .terminal-line .cmd {
+      color: #e2e8f0;
+    }
+
+    /* Git output / response text */
+    .terminal-line .output {
+      color: var(--clr-text-muted);
+    }
+
+    /* Success output in green */
+    .terminal-line .success {
+      color: var(--clr-green);
+    }
+
+    /* Commit hash in yellow */
+    .terminal-line .hash {
+      color: var(--clr-yellow);
+    }
+
+    /* Warning text in orange */
+    .terminal-line .warning {
+      color: var(--clr-orange);
+    }
+
+    /* Branch name in purple */
+    .terminal-line .branch {
+      color: var(--clr-purple);
+    }
+
+    /* Blinking cursor at the active prompt */
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 1.1em;
+      background: var(--clr-cyan);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+
+    /* Tab buttons to switch between git concept demos */
+    .terminal-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--clr-border);
+      background: #161b22;
+      overflow-x: auto; /* Allow tabs to scroll on small screens */
+    }
+
+    .terminal-tab {
+      padding: 8px 16px;
+      font-family: var(--font-code);
+      font-size: 0.72rem;
+      color: var(--clr-text-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all var(--transition);
+      white-space: nowrap;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+    }
+
+    .terminal-tab:hover {
+      color: var(--clr-cyan);
+    }
+
+    .terminal-tab.active {
+      color: var(--clr-cyan);
+      border-bottom-color: var(--clr-cyan);
+    }
+
+    /* ─── ABOUT SECTION ──────────────────────────────────────────
+       Introduction to the association
+       ──────────────────────────────────────────────────────────── */
+    #about {
+      background: var(--clr-bg-2);
+      border-top: 1px solid var(--clr-border);
+      border-bottom: 1px solid var(--clr-border);
+    }
+
+    .about__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3xl);
+      align-items: center;
+    }
+
+    /* Left column — text */
+    .about__text
+
+    /* Right column — mission cards */
+    .about__cards
+
+    /* Individual mission/value card */
+    .value-card {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+      padding: var(--space-lg);
+      background: var(--clr-bg-3);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-md);
+      transition: border-color var(--transition), transform var(--transition);
+    }
+
+    .value-card:hover {
+      border-color: var(--clr-cyan);
+      transform: translateX(4px);
+    }
+
+    /* Icon circle */
+    .value-card__icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .value-card__icon--cyan   { background: var(--clr-cyan-dim);   color: var(--clr-cyan);   }
+    .value-card__icon--green  { background: var(--clr-green-dim);  color: var(--clr-green);  }
+    .value-card__icon--orange { background: var(--clr-orange-dim); color: var(--clr-orange); }
+    .value-card__icon--purple { background: var(--clr-purple-dim); color: var(--clr-purple); }
+    .value-card__icon--grey { background: var(--clr-grey-dim); color: var(--clr-grey); }
+
+    .value-card__title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--clr-heading);
+      margin-bottom: 4px;
+    }
+
+    .value-card__text {
+      font-size: 0.88rem;
+      color: var(--clr-text-muted);
+    }
+
+    /* ─── GIT CONCEPTS SECTION ───────────────────────────────────
+       Interactive Git command reference — the core teaching section
+       ──────────────────────────────────────────────────────────── */
+    #git-concepts
+
+    /* Command card grid layout */
+    .git-command-card {
+      background: var(--clr-bg-2);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: border-color var(--transition), transform var(--transition),
+                  box-shadow var(--transition);
+    }
+
+    .git-command-card:hover {
+      border-color: var(--clr-cyan);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0, 212, 255, 0.08);
+    }
+
+    /* Coloured top border accent per command type */
+    .git-command-card--add    { border-top: 3px solid var(--clr-green);  }
+    .git-command-card--commit { border-top: 3px solid var(--clr-yellow); }
+    .git-command-card--push   { border-top: 3px solid var(--clr-cyan);   }
+    .git-command-card--ignore { border-top: 3px solid var(--clr-orange); }
+    .git-command-card--branch { border-top: 3px solid var(--clr-purple); }
+    .git-command-card--log    { border-top: 3px solid #ec4899;           }
+
+    .git-command-card__header {
+      padding: var(--space-lg) var(--space-lg) var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    /* Command icon badge */
+    .git-command-card__badge {
+      font-family: var(--font-code);
+      font-size: 0.65rem;
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .git-command-card--add    .git-command-card__badge { background: var(--clr-green-dim);  color: var(--clr-green);  }
+    .git-command-card--commit .git-command-card__badge { background: rgba(255,214,10,0.12); color: var(--clr-yellow); }
+    .git-command-card--push   .git-command-card__badge { background: var(--clr-cyan-dim);   color: var(--clr-cyan);   }
+    .git-command-card--ignore .git-command-card__badge { background: var(--clr-orange-dim); color: var(--clr-orange); }
+    .git-command-card--branch .git-command-card__badge { background: var(--clr-purple-dim); color: var(--clr-purple); }
+    .git-command-card--log    .git-command-card__badge { background: rgba(236,72,153,0.12); color: #ec4899;            }
+
+    .git-command-card__title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--clr-heading);
+    }
+
+    .git-command-card__body {
+      padding: 0 var(--space-lg) var(--space-lg);
+    }
+
+    .git-command-card__desc {
+      font-size: 0.9rem;
+      color: var(--clr-text-muted);
+      margin-bottom: var(--space-md);
+      line-height: 1.7;
+    }
+
+    /* Mini code block inside a card */
+    .mini-terminal {
+      background: #0d1117;
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      font-family: var(--font-code);
+      font-size: 0.8rem;
+      line-height: 1.7;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .mini-terminal .p { color: var(--clr-green); }         /* Prompt */
+    .mini-terminal .c { color: #e2e8f0; }                  /* Command */
+    .mini-terminal .o { color: var(--clr-text-muted); }    /* Output */
+    .mini-terminal .h { color: var(--clr-yellow); }        /* Hash */
+    .mini-terminal .s { color: var(--clr-green); }         /* Success */
+    .mini-terminal .w { color: var(--clr-orange); }        /* Warning */
+    .mini-terminal .b { color: var(--clr-purple); }        /* Branch */
+    .mini-terminal .cm { color: #6ee7b7; }                 /* Comment */
+
+    /* "Try It" button on each card */
+    .git-command-card__try {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-code);
+      font-size: 0.75rem;
+      color: var(--clr-cyan);
+      background: var(--clr-cyan-dim);
+      border: 1px solid rgba(0,212,255,0.2);
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      cursor: pointer;
+      transition: all var(--transition);
+      margin-top: var(--space-md);
+    }
+
+    .git-command-card__try:hover {
+      background: var(--clr-cyan);
+      color: #000;
+    }
+
+    /* ─── GIT WORKFLOW DIAGRAM ───────────────────────────────────
+       Visual flowchart showing the journey of a file through Git
+       ──────────────────────────────────────────────────────────── */
+    .workflow-diagram {
+      background: var(--clr-bg-2);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      margin: var(--space-2xl) 0;
+    }
+
+    .workflow-diagram__title {
+      font-family: var(--font-code);
+      font-size: 0.75rem;
+      color: var(--clr-text-muted);
+      text-align: center;
+      margin-bottom: var(--space-xl);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    /* Horizontal flow of stages */
+    .workflow-stages {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      overflow-x: auto; /* Scroll on narrow screens */
+      padding-bottom: var(--space-sm);
+    }
+
+    /* Individual stage box */
+    .workflow-stage {
+      text-align: center;
+      padding: var(--space-lg) var(--space-md);
+      min-width: 140px;
+    }
+
+    /* Stage icon circle */
+    .workflow-stage__icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin: 0 auto var(--space-md);
+      border: 2px solid;
+    }
+
+    .workflow-stage:nth-child(1) .workflow-stage__icon { border-color: var(--clr-orange); color: var(--clr-orange); background: var(--clr-orange-dim); }
+    .workflow-stage:nth-child(3) .workflow-stage__icon { border-color: var(--clr-green);  color: var(--clr-green);  background: var(--clr-green-dim);  }
+    .workflow-stage:nth-child(5) .workflow-stage__icon { border-color: var(--clr-yellow); color: var(--clr-yellow); background: rgba(255,214,10,0.12);  }
+    .workflow-stage:nth-child(7) .workflow-stage__icon { border-color: var(--clr-cyan);   color: var(--clr-cyan);   background: var(--clr-cyan-dim);   }
+    .workflow-stage:nth-child(9) .workflow-stage__icon { border-color: var(--clr-purple); color: var(--clr-purple); background: var(--clr-purple-dim); }
+
+    .workflow-stage__name {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--clr-heading);
+      margin-bottom: 4px;
+    }
+
+    .workflow-stage__cmd {
+      font-family: var(--font-code);
+      font-size: 0.72rem;
+      color: var(--clr-cyan);
+    }
+
+    /* Arrow between stages */
+    .workflow-arrow {
+      font-size: 1.3rem;
+      color: var(--clr-border);
+      padding: 0 var(--space-sm);
+      flex-shrink: 0;
+    }
+
+    /* ─── EVENTS SECTION ─────────────────────────────────────────
+       Upcoming meetings, workshops and events
+       ──────────────────────────────────────────────────────────── */
+    #events {
+      background: var(--clr-bg-2);
+      border-top: 1px solid var(--clr-border);
+      border-bottom: 1px solid var(--clr-border);
+    }
+
+    .event-card {
+      display: flex;
+      gap: var(--space-lg);
+      background: var(--clr-bg-3);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      transition: all var(--transition);
+      align-items: flex-start;
+    }
+
+    .event-card:hover {
+      border-color: var(--clr-cyan);
+      transform: translateX(4px);
+    }
+
+    /* Date block (shows day + month) */
+    .event-card__date {
+      text-align: center;
+      background: var(--clr-cyan-dim);
+      border: 1px solid rgba(0,212,255,0.2);
+      border-radius: var(--radius-md);
+      padding: var(--space-md) var(--space-lg);
+      flex-shrink: 0;
+      min-width: 68px;
+    }
+
+    .event-card__day {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--clr-cyan);
+      line-height: 1;
+    }
+
+    .event-card__month {
+      font-family: var(--font-code);
+      font-size: 0.7rem;
+      color: var(--clr-text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .event-card__content {
+      flex: 1;
+    }
+
+    /* Event type badge */
+    .event-card__tag {
+      display: inline-block;
+      font-family: var(--font-code);
+      font-size: 0.65rem;
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-bottom: var(--space-sm);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .event-card__tag--workshop { background: var(--clr-green-dim);  color: var(--clr-green);  }
+    .event-card__tag--meetup   { background: var(--clr-cyan-dim);   color: var(--clr-cyan);   }
+    .event-card__tag--seminar  { background: var(--clr-purple-dim); color: var(--clr-purple); }
+    .event-card__tag--hackathon{ background: var(--clr-orange-dim); color: var(--clr-orange); }
+
+    .event-card__title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--clr-heading);
+      margin-bottom: 4px;
+    }
+
+    .event-card__meta {
+      font-size: 0.82rem;
+      color: var(--clr-text-muted);
+      display: flex;
+      gap: var(--space-lg);
+      flex-wrap: wrap;
+    }
+
+    .event-card__meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ─── MEMBERS SECTION ────────────────────────────────────────
+       Executive committee / leadership team
+       ──────────────────────────────────────────────────────────── */
+    #members
+
+    /* Member profile card */
+    .member-card {
+      background: var(--clr-bg-2);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      text-align: center;
+      transition: all var(--transition);
+    }
+
+    .member-card:hover {
+      border-color: var(--clr-cyan);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(0, 212, 255, 0.1);
+    }
+
+    /* Member avatar — generated as CSS art (no images required) */
+    .member-card__avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto var(--space-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 800;
+      border: 2px solid var(--clr-border);
+      position: relative;
+    }
+
+    /* Each avatar gets a unique gradient background via nth-child */
+    .member-card:nth-child(1) .member-card__avatar { background: linear-gradient(135deg, #0d2137, #003d5b); color: var(--clr-cyan); }
+    .member-card:nth-child(2) .member-card__avatar { background: linear-gradient(135deg, #0d2137, #004d30); color: var(--clr-green); }
+    .member-card:nth-child(3) .member-card__avatar { background: linear-gradient(135deg, #1a0d37, #3d0060); color: var(--clr-purple); }
+    .member-card:nth-child(4) .member-card__avatar { background: linear-gradient(135deg, #2d1200, #5b2700); color: var(--clr-orange); }
+    .member-card:nth-child(5) .member-card__avatar { background: linear-gradient(135deg, #0d2137, #003d5b); color: var(--clr-cyan); }
+    .member-card:nth-child(6) .member-card__avatar { background: linear-gradient(135deg, #0d2137, #004d30); color: var(--clr-green); }
+    .member-card:nth-child(7) .member-card__avatar { background: linear-gradient(135deg, green, grey); color: var(--clr-grey); }
+
+    .member-card__name {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--clr-heading);
+      margin-bottom: 4px;
+    }
+
+    /* Member's role / position */
+    .member-card__role {
+      font-family: var(--font-code);
+      font-size: 0.72rem;
+      color: var(--clr-cyan);
+      margin-bottom: var(--space-sm);
+    }
+
+    .member-card__dept {
+      font-size: 0.82rem;
+      color: var(--clr-text-muted);
+      margin-bottom: var(--space-md);
+    }
+
+    /* Social links row */
+    .member-card__socials {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-sm);
+    }
+
+    .member-social-link {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--clr-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: var(--clr-text-muted);
+      transition: all var(--transition);
+    }
+
+    .member-social-link:hover {
+      border-color: var(--clr-cyan);
+      color: var(--clr-cyan);
+      transform: translateY(-2px);
+    }
+
+    /* ─── JOIN / CONTACT SECTION ─────────────────────────────────
+       Membership application form + contact info
+       ──────────────────────────────────────────────────────────── */
+    #join {
+      background: var(--clr-bg-2);
+      border-top: 1px solid var(--clr-border);
+    }
+
+    .join__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3xl);
+      align-items: start;
+    }
+
+    /* Left column — form */
+    .join__form-wrap
+
+    /* Right column — contact info */
+    .join__info
+
+    /* Form card */
+    .form-card {
+      background: var(--clr-bg-3);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+    }
+
+    /* Form field groups */
+    .form-group {
+      margin-bottom: var(--space-lg);
+    }
+
+    .form-label {
+      display: block;
+      font-family: var(--font-code);
+      font-size: 0.75rem;
+      color: var(--clr-text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-sm);
+    }
+
+    /* Input, select, and textarea styles */
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--clr-bg);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-md);
+      color: var(--clr-text);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      appearance: none; /* Remove default browser styling */
+    }
+
+    .form-select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23607080' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    /* Focus states — glowing border */
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--clr-cyan);
+      box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+    }
+
+    /* Side-by-side form fields */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+    }
+
+    /* Success message shown after form submission */
+    .form-success {
+      display: none; /* Hidden until JS shows it */
+      text-align: center;
+      padding: var(--space-2xl);
+    }
+
+    .form-success__icon {
+      font-size: 3rem;
+      color: var(--clr-green);
+      margin-bottom: var(--space-md);
+    }
+
+    .form-success__title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--clr-heading);
+      margin-bottom: var(--space-sm);
+    }
+
+    .form-success__text {
+      font-family: var(--font-code);
+      font-size: 0.85rem;
+      color: var(--clr-green);
+    }
+
+    /* Contact info cards */
+    .contact-card {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+      padding: var(--space-lg);
+      background: var(--clr-bg-3);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-md);
+    }
+
+    .contact-card__icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .contact-card__label {
+      font-family: var(--font-code);
+      font-size: 0.72rem;
+      color: var(--clr-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+
+    .contact-card__value {
+      font-size: 0.95rem;
+      color: var(--clr-heading);
+    }
+
+    /* Social media links */
+    .social-links {
+      display: flex;
+      gap: var(--space-md);
+      margin-top: var(--space-xl);
+      flex-wrap: wrap;
+    }
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 10px 18px;
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      color: var(--clr-text-muted);
+      transition: all var(--transition);
+      font-family: var(--font-code);
+    }
+
+    .social-link:hover {
+      border-color: var(--clr-cyan);
+      color: var(--clr-cyan);
+      transform: translateY(-2px);
+    }
+
+    /* ─── ANNOUNCEMENT BANNER ────────────────────────────────────
+       Scrolling news ticker at the very top of the page
+       ──────────────────────────────────────────────────────────── */
+    .announcement-bar {
+      background: linear-gradient(90deg, var(--clr-cyan-dim), var(--clr-green-dim));
+      border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+      padding: 8px 0;
+      overflow: hidden;
+    }
+
+    .announcement-bar__inner {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    /* "LIVE" label */
+    .announcement-bar__label {
+      font-family: var(--font-code);
+      font-size: 0.65rem;
+      color: var(--clr-green);
+      background: var(--clr-green-dim);
+      border: 1px solid rgba(0,255,157,0.3);
+      border-radius: 100px;
+      padding: 2px 10px;
+      white-space: nowrap;
+      letter-spacing: 0.1em;
+      flex-shrink: 0;
+    }
+
+    /* Scrolling text ticker */
+    .announcement-bar__ticker {
+      font-family: var(--font-code);
+      font-size: 0.78rem;
+      color: var(--clr-text);
+      white-space: nowrap;
+      animation: ticker 30s linear infinite;
+    }
+
+    /* ─── GIT LOG SECTION ────────────────────────────────────────
+       Demonstrates git log output in the context of the website's
+       own "commit history" — fictional but educational
+       ──────────────────────────────────────────────────────────── */
+    #git-log {
+      background: var(--clr-bg-2);
+      border-top: 1px solid var(--clr-border);
+      border-bottom: 1px solid var(--clr-border);
+    }
+
+    /* Git log container styled like a terminal */
+    .git-log-viewer {
+      background: #0d1117;
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      font-family: var(--font-code);
+      font-size: 0.83rem;
+    }
+
+    /* Log viewer header bar */
+    .git-log-viewer__header {
+      background: #161b22;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--clr-border);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .git-log-viewer__title {
+      font-size: 0.75rem;
+      color: var(--clr-text-muted);
+    }
+
+    /* Individual commit row in the log */
+    .commit-row {
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-lg);
+      transition: background var(--transition);
+    }
+
+    .commit-row:hover {
+      background: rgba(255,255,255,0.02);
+    }
+
+    /* Short commit hash */
+    .commit-row__hash {
+      color: var(--clr-yellow);
+      flex-shrink: 0;
+      width: 70px;
+      font-size: 0.8rem;
+    }
+
+    .commit-row__author {
+      color: var(--clr-cyan);
+      flex-shrink: 0;
+      width: 160px;
+      font-size: 0.8rem;
+    }
+
+    .commit-row__msg {
+      color: var(--clr-text);
+      flex: 1;
+      font-size: 0.82rem;
+    }
+
+    /* Conventional commit type badge */
+    .commit-type {
+      display: inline-block;
+      font-size: 0.65rem;
+      padding: 1px 8px;
+      border-radius: 100px;
+      margin-right: 6px;
+      font-weight: 700;
+    }
+
+    .commit-type--feat     { background: rgba(0,212,255,0.15); color: var(--clr-cyan); }
+    .commit-type--fix      { background: rgba(255,107,53,0.15); color: var(--clr-orange); }
+    .commit-type--chore    { background: rgba(96,112,128,0.2);  color: var(--clr-text-muted); }
+    .commit-type--security { background: rgba(0,255,157,0.15); color: var(--clr-green); }
+    .commit-type--docs     { background: rgba(168,85,247,0.15); color: var(--clr-purple); }
+
+    .commit-row__date {
+      color: var(--clr-text-muted);
+      flex-shrink: 0;
+      font-size: 0.75rem;
+    }
+
+    /* ─── .GITIGNORE VISUALISER ──────────────────────────────────
+       Interactive tool showing which files are tracked vs ignored
+       ──────────────────────────────────────────────────────────── */
+    .gitignore-demo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-xl);
+      margin-top: var(--space-xl);
+    }
+
+    .gitignore-panel {
+      background: #0d1117;
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      font-family: var(--font-code);
+      font-size: 0.82rem;
+    }
+
+    .gitignore-panel__header {
+      background: #161b22;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--clr-border);
+      font-size: 0.75rem;
+      color: var(--clr-text-muted);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .gitignore-panel__body {
+      padding: var(--space-md);
+    }
+
+    /* Individual file row in the file tree */
+    .file-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: 6px 8px;
+      border-radius: var(--radius-sm);
+      transition: background var(--transition);
+      cursor: default;
+    }
+
+    .file-row:hover {
+      background: rgba(255,255,255,0.03);
+    }
+
+    /* Status icon (tracked/ignored) */
+    .file-row__status {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      flex-shrink: 0;
+    }
+
+    .file-row__status--tracked  { background: var(--clr-green-dim);  color: var(--clr-green);  }
+    .file-row__status--ignored  { background: var(--clr-orange-dim); color: var(--clr-orange); }
+    .file-row__status--staged   { background: var(--clr-cyan-dim);   color: var(--clr-cyan);   }
+
+    .file-row__name {
+      color: var(--clr-text);
+      flex: 1;
+    }
+
+    /* Strikethrough for ignored files */
+    .file-row.ignored .file-row__name {
+      color: var(--clr-text-muted);
+      text-decoration: line-through;
+    }
+
+    .file-row__note {
+      font-size: 0.7rem;
+      color: var(--clr-text-muted);
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────────────
+       Site footer with links, attribution, and git tip
+       ──────────────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--clr-border);
+      padding: var(--space-2xl) 0;
+    }
+
+    .footer__inner {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: var(--space-2xl);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .footer__brand-desc {
+      font-size: 0.88rem;
+      color: var(--clr-text-muted);
+      margin-top: var(--space-md);
+      line-height: 1.7;
+    }
+
+    /* Footer navigation column */
+    .footer-col__title {
+      font-family: var(--font-code);
+      font-size: 0.72rem;
+      color: var(--clr-text-muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-md);
+    }
+
+    .footer-col a {
+      display: block;
+      font-size: 0.88rem;
+      color: var(--clr-text-muted);
+      margin-bottom: var(--space-sm);
+      transition: color var(--transition);
+    }
+
+    .footer-col a:hover {
+      color: var(--clr-cyan);
+    }
+
+    /* Footer bottom bar */
+    .footer__bottom {
+      padding-top: var(--space-xl);
+      border-top: 1px solid var(--clr-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+
+    .footer__bottom-text {
+      font-family: var(--font-code);
+      font-size: 0.75rem;
+      color: var(--clr-text-muted);
+    }
+
+    /* Fun git commit message in the footer */
+    .footer__git-commit {
+      font-family: var(--font-code);
+      font-size: 0.75rem;
+      color: var(--clr-text-muted);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .footer__git-commit .hash {
+      color: var(--clr-yellow);
+    }
+
+    /* ─── MODAL (for "Try It" command demo) ─────────────────────
+       A popup that shows when users click "Try It" on a git card.
+       ──────────────────────────────────────────────────────────── */
+    .modal-overlay {
+      display: none; /* Hidden until JS shows it */
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-lg);
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--clr-bg-2);
+      border: 1px solid var(--clr-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      max-width: 600px;
+      width: 100%;
+      position: relative;
+      animation: modalIn 0.3s ease;
+    }
+
+    .modal__close {
+      position: absolute;
+      top: var(--space-lg);
+      right: var(--space-lg);
+      background: var(--clr-bg-3);
+      border: 1px solid var(--clr-border);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--clr-text-muted);
+      transition: all var(--transition);
+    }
+
+    .modal__close:hover {
+      border-color: var(--clr-orange);
+      color: var(--clr-orange);
+    }
+
+    .modal__title {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--clr-heading);
+      margin-bottom: var(--space-sm);
+    }
+
+    .modal__subtitle {
+      font-size: 0.9rem;
+      color: var(--clr-text-muted);
+      margin-bottom: var(--space-xl);
+    }
+
+    /* Step-by-step commands list in modal */
+    .modal-steps
+
+    .modal-step {
+      display: flex;
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    /* Step number circle */
+    .modal-step__num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--clr-cyan-dim);
+      border: 1px solid rgba(0,212,255,0.3);
+      color: var(--clr-cyan);
+      font-family: var(--font-code);
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .modal-step__content
+
+    .modal-step__desc {
+      font-size: 0.85rem;
+      color: var(--clr-text-muted);
+      margin-bottom: var(--space-sm);
+    }
+
+    .modal-step__code {
+      background: #0d1117;
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-family: var(--font-code);
+      font-size: 0.82rem;
+      color: var(--clr-green);
+    }
+
+    /* ─── SCROLL-TO-TOP BUTTON ───────────────────────────────────
+       Appears when user scrolls down; returns to top on click
+       ──────────────────────────────────────────────────────────── */
+    .scroll-top {
+      position: fixed;
+      bottom: var(--space-xl);
+      right: var(--space-xl);
+      width: 44px;
+      height: 44px;
+      background: var(--clr-cyan);
+      color: #000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: none;
+      opacity: 0;          /* Hidden initially */
+      transform: translateY(20px);
+      transition: all var(--transition);
+      z-index: 500;
+      font-size: 1rem;
+    }
+
+    .scroll-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .scroll-top:hover {
+      background: var(--clr-green);
+      transform: translateY(-4px);
+    }
+
+    /* ─── ANIMATIONS ─────────────────────────────────────────────
+       All keyframe animations used throughout the page
+       ──────────────────────────────────────────────────────────── */
+
+    /* Fade in and slide up from below */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Modal entrance scale */
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* Blinking cursor */
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* Pulsing dot (live indicator) */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(1.4); }
+    }
+
+    /* News ticker scroll */
+    @keyframes ticker {
+      from { transform: translateX(100%); }
+      to   { transform: translateX(-100%); }
+    }
+
+    /* Entrance animation for scroll-triggered elements */
+    @keyframes revealUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Class added by Intersection Observer JS */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Staggered delays for child elements */
+    .reveal:nth-child(2) { transition-delay: 0.1s; }
+    .reveal:nth-child(3) { transition-delay: 0.2s; }
+    .reveal:nth-child(4) { transition-delay: 0.3s; }
+    .reveal:nth-child(5) { transition-delay: 0.4s; }
+    .reveal:nth-child(6) { transition-delay: 0.5s; }
+
+    /* ─── RESPONSIVE DESIGN ──────────────────────────────────────
+       Media queries for tablet and mobile devices.
+       In Git terms, these are like branches — same codebase,
+       different behaviour in different environments.
+       ──────────────────────────────────────────────────────────── */
+
+    /* TABLET — screen width below 1024px */
+    @media (max-width: 1024px) {
+      .hero__inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .hero__subtitle,
+      .hero__stats {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero__actions {
+        justify-content: center;
+      }
+
+      .terminal-widget {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .about__inner,
+      .join__inner {
+        grid-template-columns: 1fr;
+      }
+
+      .footer__inner {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* MOBILE — screen width below 768px */
+    @media (max-width: 768px) {
+      /* Hide desktop nav, show hamburger */
+      .navbar__links,
+      .navbar__cta {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      /* Single column layouts */
+      .card-grid--2,
+      .card-grid--3,
+      .card-grid--4 {
+        grid-template-columns: 1fr;
+      }
+
+      .workflow-stages {
+        justify-content: flex-start;
+      }
+
+      .gitignore-demo {
+        grid-template-columns: 1fr;
+      }
+
+      .footer__inner {
+        grid-template-columns: 1fr;
+      }
+
+      .footer__bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .hero__stats {
+        justify-content: center;
+        gap: var(--space-xl);
+      }
+
+      .commit-row__author,
+      .commit-row__date {
+        display: none; /* Hide on very small screens to fit the row */
+      }
+
+      .event-card {
+        flex-direction: column;
+      }
+    }
+
+    /* SMALL MOBILE — below 480px */
+    @media (max-width: 480px) {
+      :root {
+        --space-3xl: 3rem; /* Reduce section padding on small screens */
+      }
+
+      .modal {
+        padding: var(--space-lg);
+      }
+    }

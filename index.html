@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  UICTO ASSOCIATION OF CYBERSECURITY STUDENTS (ACS)
+  Official Website
+  ------------------------------------------------------------
+  Course:    CYB-100 · Version Control Systems
+  Lecturer:  Mr Nwebonyi Harrison
+  Purpose:   Demonstrates Git concepts (add, commit, push,
+             .gitignore, branches, hooks, etc.) in a real
+             website project context.
+  ============================================================
+-->
+<html lang="en">
+  <link rel="stylesheet" href="style.css">
+
+<head>
+  <!-- ─── CHARACTER SET & VIEWPORT ─────────────────────────────── -->
+  <!-- UTF-8 ensures all characters (including special symbols) render correctly -->
+  <meta charset="UTF-8" />
+  <!-- viewport meta tag makes the site responsive on mobile devices -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ─── SEO META TAGS ────────────────────────────────────────── -->
+  <!-- These tags help search engines understand and index the page -->
+  <meta name="description"
+    content="Official website of the Association of Cybersecurity Students (ACS) at the Ebonyi State University of ICT, Oferekpe Nigeria. Join us to learn cybersecurity, version control, and ethical hacking." />
+  <meta name="keywords"
+    content="cybersecurity, UICTO, ACS, git, version control, ethical hacking, Nigeria, Oferekpe" />
+  <meta name="author" content="ACS UICTO Web Team" />
+
+  <!-- ─── OPEN GRAPH (Social Media Preview) ────────────────────── -->
+  <!-- When someone shares this link on Facebook/Twitter/WhatsApp,
+       these tags control what image and text appears in the preview card -->
+  <meta property="og:title" content="ACS UICTO — Association of Cybersecurity Students" />
+  <meta property="og:description"
+    content="Defending the digital frontier — one commit at a time." />
+  <meta property="og:type" content="website" />
+
+  <!-- ─── PAGE TITLE ────────────────────────────────────────────── -->
+  <title>ACS UICTO | Association of Cybersecurity Students</title>
+
+  <!-- ─── GOOGLE FONTS ─────────────────────────────────────────── -->
+  <!-- Syne: bold geometric display font for headings
+       JetBrains Mono: monospace font for code blocks (fits the tech theme)
+       Outfit: clean modern font for body text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&family=Outfit:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+
+  <!-- ─── FONT AWESOME ICONS ───────────────────────────────────── -->
+  <!-- Icon library for nav icons, social media icons, and feature icons -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- ════════════════════════════════════════════════════════════
+       CSS — ALL STYLES ARE EMBEDDED IN THIS SINGLE FILE
+       ════════════════════════════════════════════════════════════ -->
+
+</head>
+
+<body>
+
+  <!-- ─── BACKGROUND GRID TEXTURE ─────────────────────────────── -->
+  <!-- This div creates the subtle grid pattern visible in the background.
+       It is position:fixed so it tiles the entire viewport. -->
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <!-- ─── ANNOUNCEMENT BAR ─────────────────────────────────────
+       A scrolling ticker at the top of the page.
+       In a real project this would be loaded from an API or CMS.
+       ──────────────────────────────────────────────────────────── -->
+  <div class="announcement-bar" role="marquee" aria-label="Latest announcements">
+    <div class="container">
+      <div class="announcement-bar__inner">
+        <span class="announcement-bar__label">● LIVE</span>
+        <span class="announcement-bar__ticker" id="ticker">
+          🚨 New Workshop: Git Branching Strategies — May 10th, 2025 &nbsp;•&nbsp;
+          📌 ACS Weekly Meeting — Every Thursday, 4:00 PM, Lab 3 &nbsp;•&nbsp;
+          🏆 UICTO Cyber Hackathon 2025 — Registration Open! &nbsp;•&nbsp;
+          📚 Module 4 Notes Published: Secrets Management — Check Portal &nbsp;•&nbsp;
+          🔐 Reminder: Never commit your .env file! git add -p before every commit.
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── NAVIGATION BAR ───────────────────────────────────────
+       Fixed navigation. JS adds 'scrolled' class when user scrolls.
+       ──────────────────────────────────────────────────────────── -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container navbar__inner">
+
+      <!-- Logo / Brand Mark -->
+      <a href="#home" class="navbar__logo" aria-label="ACS UICTO Home">
+        <div class="navbar__logo-icon" aria-hidden="true">⚔</div>
+        <div class="navbar__brand">
+          ACS UICTO
+          <span>Association of Cybersecurity Students</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <ul class="navbar__links" role="list">
+        <li><a href="#about"        class="nav-link">About</a></li>
+        <li><a href="#git-concepts" class="nav-link">Git Concepts</a></li>
+        <li><a href="#git-log"      class="nav-link">Commit Log</a></li>
+        <li><a href="#events"       class="nav-link">Events</a></li>
+        <li><a href="#members"      class="nav-link">Team</a></li>
+        <li><a href="#join"         class="nav-link">Join Us</a></li>
+      </ul>
+
+      <!-- Desktop CTA buttons -->
+      <div class="navbar__cta">
+        <a href="https://github.com" target="_blank" rel="noopener"
+           class="btn btn-outline" aria-label="Visit our GitHub repository">
+          <i class="fab fa-github" aria-hidden="true"></i>
+          GitHub
+        </a>
+        <a href="#join" class="btn btn-primary">
+          Join ACS
+        </a>
+      </div>
+
+      <!-- Mobile hamburger menu button -->
+      <button class="hamburger" id="hamburgerBtn"
+              aria-label="Open navigation menu"
+              aria-expanded="false"
+              aria-controls="mobileNav">
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+        <span class="hamburger__line"></span>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- ─── MOBILE NAVIGATION DRAWER ─────────────────────────────
+       Hidden by default. JS toggles 'open' class.
+       ──────────────────────────────────────────────────────────── -->
+  <div class="mobile-nav" id="mobileNav" role="dialog" aria-label="Mobile navigation">
+    <a href="#about"        class="mobile-nav-link">About</a>
+    <a href="#git-concepts" class="mobile-nav-link">Git Concepts</a>
+    <a href="#git-log"      class="mobile-nav-link">Commit Log</a>
+    <a href="#events"       class="mobile-nav-link">Events</a>
+    <a href="#members"      class="mobile-nav-link">Team</a>
+    <a href="#join"         class="mobile-nav-link">Join Us</a>
+    <a href="https://github.com" target="_blank" rel="noopener" class="mobile-nav-link">
+      <i class="fab fa-github"></i> GitHub
+    </a>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       MAIN CONTENT
+       ════════════════════════════════════════════════════════════ -->
+  <main>
+
+    <!-- ─── HERO SECTION ───────────────────────────────────────
+         The first thing visitors see. Two columns:
+         Left: heading + CTA  |  Right: interactive terminal demo
+         ──────────────────────────────────────────────────────── -->
+    <section class="hero" id="home" aria-label="Hero — Welcome">
+      <div class="container">
+        <div class="hero__inner">
+
+          <!-- LEFT COLUMN — Text Content -->
+          <div class="hero__content">
+
+            <!-- Animated badge -->
+            <div class="hero__badge">
+              <span class="hero__badge-dot" aria-hidden="true"></span>
+              UICTO · CYB-100 · Version Control Systems
+            </div>
+
+            <!-- Main heading with gradient accent -->
+            <h1 class="hero__title">
+              Defending the
+              <span class="gradient-text">Digital Frontier</span>
+              — One Commit at a Time.
+            </h1>
+
+            <!-- Supporting text -->
+            <p class="hero__subtitle">
+              The official association of cybersecurity students at
+              <strong>Ebonyi State University of ICT, Oferekpe Nigeria</strong>.
+              We learn, build, and secure systems together — using version
+              control as our foundation.
+            </p>
+
+            <!-- Call-to-action buttons -->
+            <div class="hero__actions">
+              <a href="#join" class="btn btn-primary">
+                <i class="fas fa-shield-halved" aria-hidden="true"></i>
+                Become a Member
+              </a>
+              <a href="#git-concepts" class="btn btn-outline">
+                <i class="fas fa-terminal" aria-hidden="true"></i>
+                Explore Git Concepts
+              </a>
+            </div>
+
+            <!-- Quick stats -->
+            <div class="hero__stats" role="list" aria-label="Association statistics">
+              <div role="listitem">
+                <div class="hero__stat-number">120+</div>
+                <div class="hero__stat-label">Members</div>
+              </div>
+              <div role="listitem">
+                <div class="hero__stat-number">4</div>
+                <div class="hero__stat-label">Modules</div>
+              </div>
+              <div role="listitem">
+                <div class="hero__stat-number">∞</div>
+                <div class="hero__stat-label">Commits</div>
+              </div>
+            </div>
+
+          </div><!-- /hero__content -->
+
+          <!-- RIGHT COLUMN — Interactive Terminal Widget -->
+          <div class="hero__visual" aria-label="Interactive Git terminal demonstration">
+            <div class="terminal-widget" role="region" aria-live="polite">
+
+              <!-- macOS-style title bar -->
+              <div class="terminal-widget__bar">
+                <div class="terminal-widget__dot terminal-widget__dot--red"   aria-hidden="true"></div>
+                <div class="terminal-widget__dot terminal-widget__dot--yellow" aria-hidden="true"></div>
+                <div class="terminal-widget__dot terminal-widget__dot--green"  aria-hidden="true"></div>
+                <div class="terminal-widget__title">bash — MINGW64:/c/Users/ACS/cyb100-project</div>
+              </div>
+
+              <!-- Tab switcher — each tab shows a different git concept -->
+              <div class="terminal-tabs" role="tablist" aria-label="Git command examples">
+                <button class="terminal-tab active" role="tab"
+                        aria-selected="true" data-tab="add">git add</button>
+                <button class="terminal-tab" role="tab"
+                        aria-selected="false" data-tab="commit">git commit</button>
+                <button class="terminal-tab" role="tab"
+                        aria-selected="false" data-tab="push">git push</button>
+                <button class="terminal-tab" role="tab"
+                        aria-selected="false" data-tab="ignore">.gitignore</button>
+                <button class="terminal-tab" role="tab"
+                        aria-selected="false" data-tab="log">git log</button>
+              </div>
+
+              <!-- Terminal output body — content is injected by JS -->
+              <div class="terminal-widget__body" id="terminalBody" role="tabpanel">
+                <!-- Content rendered by JavaScript below -->
+              </div>
+
+            </div><!-- /terminal-widget -->
+          </div><!-- /hero__visual -->
+
+        </div><!-- /hero__inner -->
+      </div>
+    </section>
+
+    <!-- ─── ABOUT SECTION ──────────────────────────────────────
+         Who we are, our mission, and core values
+         ──────────────────────────────────────────────────────── -->
+    <section class="section" id="about" aria-labelledby="about-heading">
+      <div class="container">
+        <div class="about__inner">
+
+          <!-- LEFT — Text content -->
+          <div class="about__text reveal">
+            <p class="section-label">// about the association</p>
+            <h2 class="section-title" id="about-heading">
+              Who We Are
+            </h2>
+            <p style="color: var(--clr-text); margin-bottom: 1rem; line-height: 1.8;">
+              The <strong>Association of Cybersecurity Students (ACS)</strong> at UICTO
+              is a student-led organisation dedicated to building practical cybersecurity
+              skills, community, and professional readiness for students of the
+              <em>Ebonyi State University of ICT, Oferekpe, Nigeria</em>.
+            </p>
+            <p style="color: var(--clr-text-muted); margin-bottom: 1.5rem; line-height: 1.8;">
+              From our very first lesson — setting up Git Bash and running
+              <span class="code-inline">git init</span> — we treat every project
+              as a professional software development exercise. That means proper
+              commit history, meaningful commit messages, secure secret management,
+              and never pushing without running <span class="code-inline">git diff --staged</span>.
+            </p>
+            <p style="color: var(--clr-text-muted); line-height: 1.8;">
+              Under the guidance of <strong>Mr Nwebonyi Harrison</strong>, our curriculum
+              covers Version Control Systems (CYB-100), penetration testing, network security,
+              IAM best practices, and ethical hacking — grounding theory in hands-on labs.
+            </p>
+
+            <div class="divider"></div>
+
+            <!-- Quick facts -->
+            <div style="display:flex; gap:2rem; flex-wrap:wrap;">
+              <div>
+                <div style="font-family:var(--font-code);font-size:0.72rem;color:var(--clr-text-muted);margin-bottom:4px;">FOUNDED</div>
+                <div style="font-family:var(--font-display);font-weight:700;color:var(--clr-cyan);">2022</div>
+              </div>
+              <div>
+                <div style="font-family:var(--font-code);font-size:0.72rem;color:var(--clr-text-muted);margin-bottom:4px;">PATRON</div>
+                <div style="font-family:var(--font-display);font-weight:700;color:var(--clr-heading);">Mr Harrison</div>
+              </div>
+              <div>
+                <div style="font-family:var(--font-code);font-size:0.72rem;color:var(--clr-text-muted);margin-bottom:4px;">LOCATION</div>
+                <div style="font-family:var(--font-display);font-weight:700;color:var(--clr-heading);">Oferekpe, Nigeria</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT — Values cards -->
+          <div class="about__cards reveal">
+            <!-- Each value card uses the semantic structure:
+                 icon + title + short description -->
+            <div class="value-card">
+              <div class="value-card__icon value-card__icon--cyan">
+                <i class="fas fa-code-branch" aria-hidden="true"></i>
+              </div>
+              <div>
+                <div class="value-card__title">Version Control First</div>
+                <div class="value-card__text">
+                  Every project starts with <span class="code-inline">git init</span>,
+                  a proper <code>.gitignore</code>, and an IAM-safe commit workflow.
+                  No exceptions.
+                </div>
+              </div>
+            </div>
+
+            <div class="value-card">
+              <div class="value-card__icon value-card__icon--green">
+                <i class="fas fa-shield-halved" aria-hidden="true"></i>
+              </div>
+              <div>
+                <div class="value-card__title">Security by Default</div>
+                <div class="value-card__text">
+                  We never hard-code credentials. Secrets live in
+                  <span class="code-inline">.env</span> files, protected by
+                  <span class="code-inline">.gitignore</span> and pre-commit hooks.
+                </div>
+              </div>
+            </div>
+
+            <div class="value-card">
+              <div class="value-card__icon value-card__icon--orange">
+                <i class="fas fa-users" aria-hidden="true"></i>
+              </div>
+              <div>
+                <div class="value-card__title">Collaborative Learning</div>
+                <div class="value-card__text">
+                  We use branches for features, pull requests for review, and
+                  Conventional Commits for readable audit trails — just like
+                  professional teams.
+                </div>
+              </div>
+            </div>
+
+            <div class="value-card">
+              <div class="value-card__icon value-card__icon--purple">
+                <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+              </div>
+              <div>
+                <div class="value-card__title">Academic Excellence</div>
+                <div class="value-card__text">
+                  We connect classroom theory to real-world practice through
+                  labs, workshops, hackathons, and industry guest sessions.
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── GIT CONCEPTS SECTION ─────────────────────────────────
+         The core educational section. Six git command cards.
+         Each card explains a concept and shows example commands.
+         ──────────────────────────────────────────────────────────── -->
+    <section class="section" id="git-concepts" aria-labelledby="git-concepts-heading">
+      <div class="container">
+
+        <div class="reveal">
+          <p class="section-label">// core git commands</p>
+          <h2 class="section-title" id="git-concepts-heading">
+            Git Concepts <span class="accent">Explained</span>
+          </h2>
+          <p class="section-subtitle">
+            Every command that runs on this website's codebase. Click
+            <strong>"Try It"</strong> on any card to see a step-by-step guide.
+          </p>
+        </div>
+
+        <!-- Git Workflow Visual Diagram -->
+        <div class="workflow-diagram reveal" aria-label="Git workflow diagram">
+          <div class="workflow-diagram__title">// the git workflow — file journey</div>
+          <div class="workflow-stages" role="list">
+
+            <div class="workflow-stage" role="listitem">
+              <div class="workflow-stage__icon" aria-hidden="true">
+                <i class="fas fa-pencil"></i>
+              </div>
+              <div class="workflow-stage__name">Working Dir</div>
+              <div class="workflow-stage__cmd">Edit files</div>
+            </div>
+
+            <div class="workflow-arrow" aria-hidden="true">→</div>
+
+            <div class="workflow-stage" role="listitem">
+              <div class="workflow-stage__icon" aria-hidden="true">
+                <i class="fas fa-plus"></i>
+              </div>
+              <div class="workflow-stage__name">Staging Area</div>
+              <div class="workflow-stage__cmd">git add -p</div>
+            </div>
+
+            <div class="workflow-arrow" aria-hidden="true">→</div>
+
+            <div class="workflow-stage" role="listitem">
+              <div class="workflow-stage__icon" aria-hidden="true">
+                <i class="fas fa-camera"></i>
+              </div>
+              <div class="workflow-stage__name">Local Repo</div>
+              <div class="workflow-stage__cmd">git commit -m</div>
+            </div>
+
+            <div class="workflow-arrow" aria-hidden="true">→</div>
+
+            <div class="workflow-stage" role="listitem">
+              <div class="workflow-stage__icon" aria-hidden="true">
+                <i class="fas fa-cloud-arrow-up"></i>
+              </div>
+              <div class="workflow-stage__name">Remote Repo</div>
+              <div class="workflow-stage__cmd">git push</div>
+            </div>
+
+            <div class="workflow-arrow" aria-hidden="true">→</div>
+
+            <div class="workflow-stage" role="listitem">
+              <div class="workflow-stage__icon" aria-hidden="true">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="workflow-stage__name">Collaboration</div>
+              <div class="workflow-stage__cmd">git pull / PR</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Six Git Command Cards -->
+        <div class="card-grid card-grid--3" role="list">
+
+          <!-- ── CARD 1: git add ─────────────────────────────── -->
+          <article class="git-command-card git-command-card--add reveal" role="listitem"
+                   aria-label="git add command explanation">
+            <div class="git-command-card__header">
+              <span class="git-command-card__badge">STAGE</span>
+              <h3 class="git-command-card__title">git add</h3>
+            </div>
+            <div class="git-command-card__body">
+              <p class="git-command-card__desc">
+                Moves changes from your <em>working directory</em> into the
+                <em>staging area</em> — the inspection table before a commit.
+                Always use <span class="code-inline">git add -p</span> to
+                review each change individually. <strong>Never</strong>
+                use <span class="code-inline">git add .</span> blindly.
+              </p>
+              <!-- Mini terminal code block -->
+              <div class="mini-terminal" aria-label="git add example commands">
+                <div><span class="p">$</span> <span class="c">git status</span></div>
+                <div><span class="o">  modified: index.html</span></div>
+                <div><span class="o">  modified: .env  ← DO NOT STAGE!</span></div>
+                <div>&nbsp;</div>
+                <div><span class="p">$</span> <span class="c">git add -p index.html</span></div>
+                <div><span class="o">  Stage this hunk? [y/n]</span></div>
+                <div>&nbsp;</div>
+                <div><span class="p">$</span> <span class="c">git diff --staged</span></div>
+                <div><span class="s">  ✓ only index.html staged</span></div>
+              </div>
+              <!-- Try It button — opens modal via JS -->
+              <button class="git-command-card__try"
+                      onclick="openModal('add')"
+                      aria-label="Open git add step-by-step guide">
+                <i class="fas fa-play" aria-hidden="true"></i> Try It
+              </button>
+            </div>
+          </article>
+
+          <!-- ── CARD 2: git commit ───────────────────────────── -->
+          <article class="git-command-card git-command-card--commit reveal" role="listitem"
+                   aria-label="git commit command explanation">
+            <div class="git-command-card__header">
+              <span class="git-command-card__badge">COMMIT</span>
+              <h3 class="git-command-card__title">git commit</h3>
+            </div>
+            <div class="git-command-card__body">
+              <p class="git-command-card__desc">
+                Permanently saves the staged snapshot into the local
+                repository with a cryptographic SHA-1 hash. Write commits
+                using the <em>Conventional Commits</em> format so your
+                history is human-readable and machine-searchable.
+              </p>
+              <div class="mini-terminal" aria-label="git commit example commands">
+                <div><span class="cm"># ✓ Good — IAM-searchable message</span></div>
+                <div><span class="p">$</span> <span class="c">git commit -m "feat(nav): add mobile hamburger menu"</span></div>
+                <div><span class="s">  [main b7d4c82] feat(nav): add mobile...</span></div>
+                <div>&nbsp;</div>
+                <div><span class="cm"># ✗ Bad — defeats the audit trail</span></div>
+                <div><span class="p">$</span> <span class="c">git commit -m "update"</span></div>
+                <div><span class="w">  ← analyst cannot find this in log</span></div>
+              </div>
+              <button class="git-command-card__try"
+                      onclick="openModal('commit')"
+                      aria-label="Open git commit step-by-step guide">
+                <i class="fas fa-play" aria-hidden="true"></i> Try It
+              </button>
+            </div>
+          </article>
+
+          <!-- ── CARD 3: git push ────────────────────────────── -->
+          <article class="git-command-card git-command-card--push reveal" role="listitem"
+                   aria-label="git push command explanation">
+            <div class="git-command-card__header">
+              <span class="git-command-card__badge">PUSH</span>
+              <h3 class="git-command-card__title">git push</h3>
+            </div>
+            <div class="git-command-card__body">
+              <p class="git-command-card__desc">
+                Uploads your local commits to a remote repository (e.g., GitHub),
+                making your work available to the rest of the team. Before
+                pushing to <span class="code-inline">main</span>, ensure all
+                tests pass and pre-commit hooks have cleared.
+              </p>
+              <div class="mini-terminal" aria-label="git push example commands">
+                <div><span class="cm"># First push — set upstream branch</span></div>
+                <div><span class="p">$</span> <span class="c">git push -u origin main</span></div>
+                <div><span class="b">  Branch 'main' set to track 'origin/main'</span></div>
+                <div>&nbsp;</div>
+                <div><span class="cm"># Subsequent pushes</span></div>
+                <div><span class="p">$</span> <span class="c">git push</span></div>
+                <div><span class="s">  To github.com:ACS-UICTO/website.git</span></div>
+                <div><span class="s">  b7d4c82..f9a3c11  main → main</span></div>
+              </div>
+              <button class="git-command-card__try"
+                      onclick="openModal('push')"
+                      aria-label="Open git push step-by-step guide">
+                <i class="fas fa-play" aria-hidden="true"></i> Try It
+              </button>
+            </div>
+          </article>
+
+          <!-- ── CARD 4: .gitignore ──────────────────────────── -->
+          <article class="git-command-card git-command-card--ignore reveal" role="listitem"
+                   aria-label=".gitignore explanation">
+            <div class="git-command-card__header">
+              <span class="git-command-card__badge">IGNORE</span>
+              <h3 class="git-command-card__title">.gitignore</h3>
+            </div>
+            <div class="git-command-card__body">
+              <p class="git-command-card__desc">
+                A plain text file that tells Git which files to
+                <strong>never track</strong>. Create it before your
+                first commit. Protect
+                <span class="code-inline">.env</span>,
+                <span class="code-inline">*.key</span>,
+                <span class="code-inline">*.pem</span>, and
+                <span class="code-inline">*.log</span> at minimum.
+              </p>
+              <div class="mini-terminal" aria-label=".gitignore file contents example">
+                <div><span class="cm"># .gitignore — create FIRST</span></div>
+                <div><span class="c">.env</span>          <span class="s">← secrets protected</span></div>
+                <div><span class="c">*.key  *.pem</span>  <span class="s">← keys blocked</span></div>
+                <div><span class="c">*.log</span>         <span class="s">← logs excluded</span></div>
+                <div><span class="c">node_modules/</span> <span class="s">← dependencies skipped</span></div>
+                <div>&nbsp;</div>
+                <div><span class="p">$</span> <span class="c">git status</span></div>
+                <div><span class="s">  .env — not tracked ✓</span></div>
+              </div>
+              <button class="git-command-card__try"
+                      onclick="openModal('ignore')"
+                      aria-label="Open .gitignore step-by-step guide">
+                <i class="fas fa-play" aria-hidden="true"></i> Try It
+              </button>
+            </div>
+          </article>
+
+          <!-- ── CARD 5: git branch ──────────────────────────── -->
+          <article class="git-command-card git-command-card--branch reveal" role="listitem"
+                   aria-label="git branch command explanation">
+            <div class="git-command-card__header">
+              <span class="git-command-card__badge">BRANCH</span>
+              <h3 class="git-command-card__title">git branch</h3>
+            </div>
+            <div class="git-command-card__body">
+              <p class="git-command-card__desc">
+                Branches let you work on a new feature or fix in isolation —
+                without breaking the <span class="code-inline">main</span>
+                branch. Think of branches as parallel universes of your
+                codebase that can later be merged together.
+              </p>
+              <div class="mini-terminal" aria-label="git branch example commands">
+                <div><span class="cm"># Create and switch to a new branch</span></div>
+                <div><span class="p">$</span> <span class="c">git checkout -b feat/mobile-nav</span></div>
+                <div><span class="b">  Switched to a new branch 'feat/mobile-nav'</span></div>
+                <div>&nbsp;</div>
+                <div><span class="p">$</span> <span class="c">git branch</span></div>
+                <div><span class="b">* feat/mobile-nav  ← current</span></div>
+                <div><span class="o">  main</span></div>
+                <div>&nbsp;</div>
+                <div><span class="p">$</span> <span class="c">git merge feat/mobile-nav</span></div>
+              </div>
+              <button class="git-command-card__try"
+                      onclick="openModal('branch')"
+                      aria-label="Open git branch step-by-step guide">
+                <i class="fas fa-play" aria-hidden="true"></i> Try It
+              </button>
+            </div>
+          </article>
+
+          <!-- ── CARD 6: git log ─────────────────────────────── -->
+          <article class="git-command-card git-command-card--log reveal" role="listitem"
+                   aria-label="git log command explanation">
+            <div class="git-command-card__header">
+              <span class="git-command-card__badge">AUDIT</span>
+              <h3 class="git-command-card__title">git log</h3>
+            </div>
+            <div class="git-command-card__body">
+              <p class="git-command-card__desc">
+                The forensic tool of Git — shows the complete commit history
+                (your IAM audit trail). Use flags to filter by author, date,
+                file, or message keyword. Essential for security investigations.
+              </p>
+              <div class="mini-terminal" aria-label="git log example commands">
+                <div><span class="p">$</span> <span class="c">git log --oneline --graph --all</span></div>
+                <div><span class="h">* f9a3c11</span> <span class="c">feat(nav): add hamburger menu</span></div>
+                <div><span class="h">* b7d4c82</span> <span class="c">security: install pre-commit hooks</span></div>
+                <div><span class="h">* a3f9c12</span> <span class="c">chore: add IAM-safe .gitignore</span></div>
+                <div>&nbsp;</div>
+                <div><span class="cm"># Search by keyword</span></div>
+                <div><span class="p">$</span> <span class="c">git log --grep='security' --oneline</span></div>
+              </div>
+              <button class="git-command-card__try"
+                      onclick="openModal('log')"
+                      aria-label="Open git log step-by-step guide">
+                <i class="fas fa-play" aria-hidden="true"></i> Try It
+              </button>
+            </div>
+          </article>
+
+        </div><!-- /card-grid -->
+
+        <!-- .gitignore Visualiser — shows tracked vs ignored files -->
+        <div class="divider reveal"></div>
+
+        <div class="reveal">
+          <p class="section-label">// interactive demo</p>
+          <h3 class="section-title" style="font-size:1.8rem;">
+            .gitignore <span class="accent">File Tracker</span>
+          </h3>
+          <p class="section-subtitle" style="margin-bottom:0;">
+            See which files Git tracks vs. which it ignores based on your .gitignore rules.
+          </p>
+        </div>
+
+        <!-- Two-panel visualiser: file tree + gitignore rules -->
+        <div class="gitignore-demo reveal">
+
+          <!-- Left panel: project file tree -->
+          <div class="gitignore-panel" aria-label="Project file tree">
+            <div class="gitignore-panel__header">
+              <i class="fas fa-folder-open" aria-hidden="true"></i>
+              cyb100-website/ — project files
+            </div>
+            <div class="gitignore-panel__body" role="list" aria-label="File list with tracking status">
+              <!-- Each file row shows whether Git tracks it or ignores it -->
+              <!-- TRACKED files (green checkmark) -->
+              <div class="file-row" role="listitem" aria-label="index.html — tracked">
+                <div class="file-row__status file-row__status--tracked" aria-hidden="true">✓</div>
+                <span class="file-row__name">📄 index.html</span>
+                <span class="file-row__note" style="color:var(--clr-green)">tracked</span>
+              </div>
+              <div class="file-row" role="listitem" aria-label="style.css — tracked">
+                <div class="file-row__status file-row__status--tracked" aria-hidden="true">✓</div>
+                <span class="file-row__name">🎨 style.css</span>
+                <span class="file-row__note" style="color:var(--clr-green)">tracked</span>
+              </div>
+              <div class="file-row" role="listitem" aria-label="main.js — tracked">
+                <div class="file-row__status file-row__status--tracked" aria-hidden="true">✓</div>
+                <span class="file-row__name">⚡ main.js</span>
+                <span class="file-row__note" style="color:var(--clr-green)">tracked</span>
+              </div>
+              <div class="file-row" role="listitem" aria-label=".gitignore — tracked">
+                <div class="file-row__status file-row__status--tracked" aria-hidden="true">✓</div>
+                <span class="file-row__name">📋 .gitignore</span>
+                <span class="file-row__note" style="color:var(--clr-green)">tracked</span>
+              </div>
+              <div class="file-row" role="listitem" aria-label=".env.example — tracked">
+                <div class="file-row__status file-row__status--tracked" aria-hidden="true">✓</div>
+                <span class="file-row__name">📋 .env.example</span>
+                <span class="file-row__note" style="color:var(--clr-green)">tracked</span>
+              </div>
+              <div class="file-row" role="listitem" aria-label="README.md — tracked">
+                <div class="file-row__status file-row__status--tracked" aria-hidden="true">✓</div>
+                <span class="file-row__name">📝 README.md</span>
+                <span class="file-row__note" style="color:var(--clr-green)">tracked</span>
+              </div>
+
+              <!-- STAGED files (cyan — staged but not yet committed) -->
+              <div class="file-row" role="listitem" aria-label="events.json — staged">
+                <div class="file-row__status file-row__status--staged" aria-hidden="true">+</div>
+                <span class="file-row__name">📊 events.json</span>
+                <span class="file-row__note" style="color:var(--clr-cyan)">staged</span>
+              </div>
+
+              <!-- IGNORED files (orange X — gitignore is working) -->
+              <div class="file-row ignored" role="listitem" aria-label=".env — ignored by gitignore">
+                <div class="file-row__status file-row__status--ignored" aria-hidden="true">✗</div>
+                <span class="file-row__name">🔐 .env</span>
+                <span class="file-row__note" style="color:var(--clr-orange)">ignored ✓</span>
+              </div>
+              <div class="file-row ignored" role="listitem" aria-label="server.key — ignored by gitignore">
+                <div class="file-row__status file-row__status--ignored" aria-hidden="true">✗</div>
+                <span class="file-row__name">🔑 server.key</span>
+                <span class="file-row__note" style="color:var(--clr-orange)">ignored ✓</span>
+              </div>
+              <div class="file-row ignored" role="listitem" aria-label="app.log — ignored by gitignore">
+                <div class="file-row__status file-row__status--ignored" aria-hidden="true">✗</div>
+                <span class="file-row__name">📜 app.log</span>
+                <span class="file-row__note" style="color:var(--clr-orange)">ignored ✓</span>
+              </div>
+              <div class="file-row ignored" role="listitem" aria-label="node_modules/ — ignored by gitignore">
+                <div class="file-row__status file-row__status--ignored" aria-hidden="true">✗</div>
+                <span class="file-row__name">📦 node_modules/</span>
+                <span class="file-row__note" style="color:var(--clr-orange)">ignored ✓</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right panel: the .gitignore file contents -->
+          <div class="gitignore-panel" aria-label=".gitignore file contents">
+            <div class="gitignore-panel__header">
+              <i class="fas fa-ban" aria-hidden="true"></i>
+              .gitignore — rules that protect this site
+            </div>
+            <div class="gitignore-panel__body">
+              <!-- The actual .gitignore content that this website would use -->
+              <div style="line-height:2; color: var(--clr-text-muted);">
+                <div style="color:#6ee7b7;"># Environment secrets</div>
+                <div style="color: var(--clr-orange);">.env</div>
+                <div style="color: var(--clr-orange);">.env.*</div>
+                <div style="color: var(--clr-orange);">.env.local</div>
+                <br>
+                <div style="color:#6ee7b7;"># Cryptographic keys</div>
+                <div style="color: var(--clr-orange);">*.key</div>
+                <div style="color: var(--clr-orange);">*.pem  *.p12  *.pfx</div>
+                <div style="color: var(--clr-orange);">id_rsa  id_ed25519</div>
+                <br>
+                <div style="color:#6ee7b7;"># Log files (may echo credentials)</div>
+                <div style="color: var(--clr-orange);">*.log</div>
+                <div style="color: var(--clr-orange);">logs/</div>
+                <br>
+                <div style="color:#6ee7b7;"># Dependencies (large, auto-generated)</div>
+                <div style="color: var(--clr-orange);">node_modules/</div>
+                <div style="color: var(--clr-orange);">__pycache__/</div>
+                <br>
+                <div style="color:#6ee7b7;"># OS / Editor junk</div>
+                <div style="color: var(--clr-orange);">.DS_Store</div>
+                <div style="color: var(--clr-orange);">Thumbs.db</div>
+                <div style="color: var(--clr-orange);">*.swp</div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /gitignore-demo -->
+
+      </div>
+    </section>
+
+    <!-- ─── GIT LOG / COMMIT HISTORY SECTION ─────────────────────
+         Fictional but realistic commit history of this website.
+         Teaches students what a good git log looks like.
+         ──────────────────────────────────────────────────────────── -->
+    <section class="section" id="git-log" aria-labelledby="gitlog-heading">
+      <div class="container">
+
+        <div class="reveal">
+          <p class="section-label">// this website's commit history</p>
+          <h2 class="section-title" id="gitlog-heading">
+            Live <span class="accent">Commit Log</span>
+          </h2>
+          <p class="section-subtitle">
+            This is what
+            <span class="code-inline">git log --oneline --all</span> looks like
+            on the ACS website repository. Notice the Conventional Commit format
+            — every change is traceable, searchable, and auditable.
+          </p>
+        </div>
+
+        <!-- Git log viewer (styled like a real terminal output) -->
+        <div class="git-log-viewer reveal" role="region" aria-label="Git commit history log">
+
+          <!-- Header bar -->
+          <div class="git-log-viewer__header">
+            <div class="terminal-widget__dot terminal-widget__dot--red"   aria-hidden="true"></div>
+            <div class="terminal-widget__dot terminal-widget__dot--yellow" aria-hidden="true"></div>
+            <div class="terminal-widget__dot terminal-widget__dot--green"  aria-hidden="true"></div>
+            <span class="git-log-viewer__title">
+              $ git log --oneline --all --decorate | head -20
+            </span>
+          </div>
+
+          <!-- Commit rows — each row is one commit in the history -->
+          <!-- Format: [hash]  [author]  [type][message]  [date] -->
+          <div role="list" aria-label="List of commits">
+
+            <div class="commit-row" role="listitem">
+              <span class="commit-row__hash" aria-label="Commit hash">f9a3c11</span>
+              <span class="commit-row__author">Harrison N.</span>
+              <span class="commit-row__msg">
+                <span class="commit-type commit-type--feat">feat</span>
+                add mobile hamburger navigation menu
+              </span>
+              <span class="commit-row__date">2 hours ago</span>
+            </div>
+
+            <div class="commit-row" role="listitem">
+              <span class="commit-row__hash">b7d4c82</span>
+              <span class="commit-row__author">Chisom A.</span>
+              <span class="commit-row__msg">
+                <span class="commit-type commit-type--security">security</span>
+                install pre-commit hooks with gitleaks scanner
+              </span>
+              <span class="commit-row__date">5 hours ago</span>
+            </div>
+
+            <div class="commit-row" role="listitem">
+              <span class="commit-row__hash">e2c1d09</span>
+              <span class="commit-row__author">Kelechi O.</span>
+              <span class="commit-row__msg">
+                <span class="commit-type commit-type--feat">feat</span>
+                add events section with calendar cards
+              </span>
+              <span class="commit-row__date">Yesterday</span>
+            </div>
+
+            <div class="commit-row" role="listitem">
+              <span class="commit-row__hash">a8f5b33</span>
+              <span class="commit-row__author">Blessing N.</span>
+              <span class="commit-row__msg">
+                <span class="commit-type commit-type--fix">fix</span>
+                correct hero responsive layout on screens below 768px
+              </span>
+              <span class="commit-row__date">2 days ago</span>
+            </div>
+
+            <div class="commit-row" role="listitem">
+              <span class="commit-row__hash">9c4e721</span>
+              <span class="commit-row__author">Harrison N.</span>
+              <span class="commit-row__msg">
+                <span class="commit-type commit-type--feat">feat</span>
+                add git concepts section with interactive terminal tabs
+              </span>
+              <span class="commit-row__date">3 days ago</span>
+            </div>
+
+            <div class="commit-row" role="listitem">
+              <span class="commit-row__hash">7d3a89c</span>
+              <span class="commit-row__author">Ifeanyi E.</span>
+              <span class="commit-row__msg">
+                <span class="commit-type commit-type--docs">docs</span>
+                add comprehensive code comments to all CSS and JS
+              </span>
+              <span class="commit-row__date">3 days ago</span>
+            </div>
+
+            <div class="commit-row" role="listitem">
+              <span class="commit-row__hash">5b2d14f</span>
+              <span class="commit-row__author">Chisom A.</span>
+              <span class="commit-row__msg">
+                <span class="commit-type commit-type--chore">chore</span>
+                add .env.example template with all required variable names
+              </span>
+              <span class="commit-row__date">4 days ago</span>
+            </div>
+
+            <div class="commit-row" role="listitem">
+              <span class="commit-row__hash">3e9c047</span>
+              <span class="commit-row__author">Kelechi O.</span>
+              <span class="commit-row__msg">
+                <span class="commit-type commit-type--feat">feat</span>
+                add members section with exec committee profiles
+              </span>
+              <span class="commit-row__date">5 days ago</span>
+            </div>
+
+            <div class="commit-row" role="listitem">
+              <span class="commit-row__hash">1a6f830</span>
+              <span class="commit-row__author">Harrison N.</span>
+              <span class="commit-row__msg">
+                <span class="commit-type commit-type--security">security</span>
+                add IAM-safe .gitignore protecting .env, *.key, *.pem, *.log
+              </span>
+              <span class="commit-row__date">6 days ago</span>
+            </div>
+
+            <div class="commit-row" role="listitem">
+              <span class="commit-row__hash">0d4b221</span>
+              <span class="commit-row__author">Harrison N.</span>
+              <span class="commit-row__msg">
+                <span class="commit-type commit-type--chore">chore</span>
+                initial commit — git init, README, project structure
+              </span>
+              <span class="commit-row__date">1 week ago</span>
+            </div>
+
+          </div><!-- /commit list -->
+        </div><!-- /git-log-viewer -->
+
+        <!-- Forensic search tip -->
+        <div class="card" style="margin-top:1.5rem; background:var(--clr-bg-3);" class="reveal">
+          <p style="font-family:var(--font-code);font-size:0.8rem;color:var(--clr-text-muted);margin-bottom:0.5rem;">
+            // IAM forensics tip — searching this log
+          </p>
+          <p style="font-size:0.9rem;color:var(--clr-text);margin-bottom:1rem;">
+            In a real security investigation, you can search this entire history in seconds:
+          </p>
+          <div class="mini-terminal">
+            <div><span class="cm"># Find all security-related commits</span></div>
+            <div><span class="p">$</span> <span class="c">git log --grep='security' --oneline</span></div>
+            <div>&nbsp;</div>
+            <div><span class="cm"># Find who last changed the login page</span></div>
+            <div><span class="p">$</span> <span class="c">git blame auth/login.js</span></div>
+            <div>&nbsp;</div>
+            <div><span class="cm"># Credential archaeology — was an API key ever committed?</span></div>
+            <div><span class="p">$</span> <span class="c">git log -S 'sk_live_' --oneline</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─── EVENTS SECTION ───────────────────────────────────────
+         Upcoming meetings, workshops, and hackathons
+         ──────────────────────────────────────────────────────────── -->
+    <section class="section" id="events" aria-labelledby="events-heading">
+      <div class="container">
+
+        <div class="reveal">
+          <p class="section-label">// upcoming activities</p>
+          <h2 class="section-title" id="events-heading">
+            Events &amp; <span class="accent">Workshops</span>
+          </h2>
+          <p class="section-subtitle">
+            Weekly meetings, hands-on labs, and guest lectures. All events
+            are open to registered ACS members.
+          </p>
+        </div>
+
+        <!-- Event cards list -->
+        <div style="display:flex; flex-direction:column; gap:1rem;" role="list"
+             aria-label="Upcoming events">
+
+          <!-- Event 1 -->
+          <article class="event-card reveal" role="listitem"
+                   aria-label="Git Branching Workshop — May 10">
+            <div class="event-card__date" aria-label="May 10">
+              <div class="event-card__day">10</div>
+              <div class="event-card__month">MAY</div>
+            </div>
+            <div class="event-card__content">
+              <span class="event-card__tag event-card__tag--workshop">Workshop</span>
+              <h3 class="event-card__title">
+                Git Branching Strategies & Protected Branches
+              </h3>
+              <div class="event-card__meta">
+                <span><i class="fas fa-clock" aria-hidden="true"></i> 2:00 PM – 5:00 PM</span>
+                <span><i class="fas fa-location-dot" aria-hidden="true"></i> Lab 3, UICTO</span>
+                <span><i class="fas fa-user" aria-hidden="true"></i> Mr Nwebonyi Harrison</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Event 2 -->
+          <article class="event-card reveal" role="listitem"
+                   aria-label="Weekly Meeting — May 15">
+            <div class="event-card__date" aria-label="May 15">
+              <div class="event-card__day">15</div>
+              <div class="event-card__month">MAY</div>
+            </div>
+            <div class="event-card__content">
+              <span class="event-card__tag event-card__tag--meetup">Meetup</span>
+              <h3 class="event-card__title">
+                ACS Weekly Meeting — Module 4 Review & Q&amp;A
+              </h3>
+              <div class="event-card__meta">
+                <span><i class="fas fa-clock" aria-hidden="true"></i> 4:00 PM – 5:30 PM</span>
+                <span><i class="fas fa-location-dot" aria-hidden="true"></i> ICT Hall, UICTO</span>
+                <span><i class="fas fa-user" aria-hidden="true"></i> Open discussion</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Event 3 -->
+          <article class="event-card reveal" role="listitem"
+                   aria-label="Secrets Management Seminar — May 22">
+            <div class="event-card__date" aria-label="May 22">
+              <div class="event-card__day">22</div>
+              <div class="event-card__month">MAY</div>
+            </div>
+            <div class="event-card__content">
+              <span class="event-card__tag event-card__tag--seminar">Seminar</span>
+              <h3 class="event-card__title">
+                Secrets Management in CI/CD Pipelines — Guest Lecture
+              </h3>
+              <div class="event-card__meta">
+                <span><i class="fas fa-clock" aria-hidden="true"></i> 10:00 AM – 12:00 PM</span>
+                <span><i class="fas fa-location-dot" aria-hidden="true"></i> Auditorium, UICTO</span>
+                <span><i class="fas fa-user" aria-hidden="true"></i> Industry Guest Speaker</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Event 4 -->
+          <article class="event-card reveal" role="listitem"
+                   aria-label="UICTO Cyber Hackathon — June 7">
+            <div class="event-card__date" aria-label="June 7">
+              <div class="event-card__day">07</div>
+              <div class="event-card__month">JUN</div>
+            </div>
+            <div class="event-card__content">
+              <span class="event-card__tag event-card__tag--hackathon">Hackathon</span>
+              <h3 class="event-card__title">
+                UICTO Cyber Hackathon 2025 — Build. Secure. Win.
+              </h3>
+              <div class="event-card__meta">
+                <span><i class="fas fa-clock" aria-hidden="true"></i> 48-hour event</span>
+                <span><i class="fas fa-location-dot" aria-hidden="true"></i> UICTO Campus</span>
+                <span><i class="fas fa-user" aria-hidden="true"></i> All students welcome</span>
+              </div>
+            </div>
+          </article>
+
+        </div><!-- /events list -->
+
+      </div>
+    </section>
+
+    <!-- ─── MEMBERS / TEAM SECTION ───────────────────────────────
+         Executive committee profiles
+         ──────────────────────────────────────────────────────────── -->
+    <section class="section" id="members" aria-labelledby="members-heading">
+      <div class="container">
+
+        <div class="reveal" style="text-align:center;max-width:600px;margin:0 auto;">
+          <p class="section-label">// the exec committee</p>
+          <h2 class="section-title" id="members-heading">
+            Meet the <span class="accent">Team</span>
+          </h2>
+          <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">
+            The leadership team that keeps ACS running — and makes sure every
+            repo has a proper .gitignore before the first commit.
+          </p>
+        </div>
+
+        <!-- Member profile cards grid -->
+        <div class="card-grid card-grid--3" role="list" aria-label="Executive committee members">
+
+          <!-- Member 1 — President -->
+          <article class="member-card reveal" role="listitem" aria-label="Harrison Nwebonyi — Patron">
+            <div class="member-card__avatar" aria-hidden="true">HN</div>
+            <div class="member-card__name">Mr Nwebonyi Harrison</div>
+            <div class="member-card__role">// Patron & Lecturer</div>
+            <div class="member-card__dept">CYB-100 · Version Control Systems</div>
+            <div class="member-card__socials">
+              <a href="#" class="member-social-link" aria-label="GitHub profile">
+                <i class="fab fa-github" aria-hidden="true"></i>
+              </a>
+              <a href="#" class="member-social-link" aria-label="LinkedIn profile">
+                <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+              </a>
+              <a href="#" class="member-social-link" aria-label="Email">
+                <i class="fas fa-envelope" aria-hidden="true"></i>
+              </a>
+            </div>
+          </article>
+
+          <!-- Member 2 -->
+          <article class="member-card reveal" role="listitem" aria-label="Chisom Adaeze — President">
+            <div class="member-card__avatar" aria-hidden="true">CA</div>
+            <div class="member-card__name">Chisom Adaeze</div>
+            <div class="member-card__role">// President</div>
+            <div class="member-card__dept">Cybersecurity, Level 300</div>
+            <div class="member-card__socials">
+              <a href="#" class="member-social-link" aria-label="GitHub profile">
+                <i class="fab fa-github" aria-hidden="true"></i>
+              </a>
+              <a href="#" class="member-social-link" aria-label="LinkedIn profile">
+                <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+              </a>
+              <a href="#" class="member-social-link" aria-label="Twitter profile">
+                <i class="fab fa-x-twitter" aria-hidden="true"></i>
+              </a>
+            </div>
+          </article>
+
+          <!-- Member 3 -->
+          <article class="member-card reveal" role="listitem"
+                   aria-label="Kelechi Obi — Vice President">
+            <div class="member-card__avatar" aria-hidden="true">KO</div>
+            <div class="member-card__name">Kelechi Obi</div>
+            <div class="member-card__role">// Vice President</div>
+            <div class="member-card__dept">Cybersecurity, Level 300</div>
+            <div class="member-card__socials">
+              <a href="#" class="member-social-link" aria-label="GitHub profile">
+                <i class="fab fa-github" aria-hidden="true"></i>
+              </a>
+              <a href="#" class="member-social-link" aria-label="LinkedIn profile">
+                <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+              </a>
+            </div>
+          </article>
+
+          <!-- Member 4 -->
+          <article class="member-card reveal" role="listitem"
+                   aria-label="Blessing Nwachukwu — Secretary">
+            <div class="member-card__avatar" aria-hidden="true">BN</div>
+            <div class="member-card__name">Blessing Nwachukwu</div>
+            <div class="member-card__role">// General Secretary</div>
+            <div class="member-card__dept">Cybersecurity, Level 200</div>
+            <div class="member-card__socials">
+              <a href="#" class="member-social-link" aria-label="GitHub profile">
+                <i class="fab fa-github" aria-hidden="true"></i>
+              </a>
+              <a href="#" class="member-social-link" aria-label="Email">
+                <i class="fas fa-envelope" aria-hidden="true"></i>
+              </a>
+            </div>
+          </article>
+
+          <!-- Member 5 -->
+          <article class="member-card reveal" role="listitem"
+                   aria-label="Ifeanyi Eze — Technical Lead">
+            <div class="member-card__avatar" aria-hidden="true">IE</div>
+            <div class="member-card__name">Ifeanyi Eze</div>
+            <div class="member-card__role">// Technical Lead</div>
+            <div class="member-card__dept">Cybersecurity, Level 300</div>
+            <div class="member-card__socials">
+              <a href="#" class="member-social-link" aria-label="GitHub profile">
+                <i class="fab fa-github" aria-hidden="true"></i>
+              </a>
+              <a href="#" class="member-social-link" aria-label="LinkedIn profile">
+                <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+              </a>
+            </div>
+          </article>
+
+          <!-- Member 6 -->
+          <article class="member-card reveal" role="listitem"
+                   aria-label="Amaka Ugwu — PRO">
+            <div class="member-card__avatar" aria-hidden="true">AU</div>
+            <div class="member-card__name">Amaka Ugwu</div>
+            <div class="member-card__role">// Public Relations Officer</div>
+            <div class="member-card__dept">Cybersecurity, Level 200</div>
+            <div class="member-card__socials">
+              <a href="#" class="member-social-link" aria-label="Twitter profile">
+                <i class="fab fa-x-twitter" aria-hidden="true"></i>
+              </a>
+              <a href="#" class="member-social-link" aria-label="LinkedIn profile">
+                <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+              </a>
+            </div>
+          </article>
+
+          <!-- Member 7 -->
+          <article class="member-card reveal" role="listitem"
+                   aria-label="Edeigbo Victor — PRO">
+            <div class="member-card__avatar" aria-hidden="true">EV</div>
+            <div class="member-card__name">Edeigbo Victor</div>
+            <div class="member-card__role">// General Course Rep UICTO</div>
+            <div class="member-card__dept">Cybersecurity, Level 100</div>
+            <div class="member-card__socials">
+              <a href="#" class="member-social-link" aria-label="Facebook profile">
+                <i class="fab fa-facebook" aria-hidden="true"></i>
+              </a>
+              <a href="#" class="member-social-link" aria-label="Twitter profile">
+                <i class="fab fa-x-twitter" aria-hidden="true"></i>
+              </a>
+            </div>
+          </article>
+
+        </div><!-- /member cards -->
+
+      </div>
+    </section>
+
+    <!-- ─── JOIN / CONTACT SECTION ───────────────────────────────
+         Membership application form + contact info
+         ──────────────────────────────────────────────────────────── -->
+    <section class="section" id="join" aria-labelledby="join-heading">
+      <div class="container">
+
+        <div class="reveal" style="text-align:center;max-width:600px;margin:0 auto var(--space-2xl);">
+          <p class="section-label">// become a member</p>
+          <h2 class="section-title" id="join-heading">
+            Join the <span class="accent">Association</span>
+          </h2>
+          <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">
+            Open to all students at UICTO. Membership gives you access to
+            workshops, mentoring, lab resources, and the ACS GitHub organisation.
+          </p>
+        </div>
+
+        <div class="join__inner">
+
+          <!-- LEFT COLUMN — Membership Application Form -->
+          <div class="join__form-wrap reveal">
+            <div class="form-card">
+
+              <!-- Form heading -->
+              <h3 style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;
+                         color:var(--clr-heading);margin-bottom:0.5rem;">
+                Apply for Membership
+              </h3>
+              <p style="font-size:0.85rem;color:var(--clr-text-muted);margin-bottom:1.5rem;">
+                All fields are required. You will receive confirmation within 48 hours.
+              </p>
+
+              <!-- The application form -->
+              <!-- In a real project, the form action would point to a server endpoint.
+                   Here it is handled by JavaScript to demonstrate the concept. -->
+              <form id="joinForm" novalidate aria-label="Membership application form">
+
+                <!-- Name fields — two columns on desktop -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="firstName">First Name</label>
+                    <input type="text"
+                           id="firstName"
+                           name="firstName"
+                           class="form-input"
+                           placeholder="Chisom"
+                           autocomplete="given-name"
+                           required
+                           aria-required="true" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="lastName">Last Name</label>
+                    <input type="text"
+                           id="lastName"
+                           name="lastName"
+                           class="form-input"
+                           placeholder="Adaeze"
+                           autocomplete="family-name"
+                           required
+                           aria-required="true" />
+                  </div>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                  <label class="form-label" for="email">Student Email</label>
+                  <input type="email"
+                         id="email"
+                         name="email"
+                         class="form-input"
+                         placeholder="s2024001@uicto.edu.ng"
+                         autocomplete="email"
+                         required
+                         aria-required="true" />
+                </div>
+
+                <!-- Student ID -->
+                <div class="form-group">
+                  <label class="form-label" for="studentId">Student ID / Matric Number</label>
+                  <input type="text"
+                         id="studentId"
+                         name="studentId"
+                         class="form-input"
+                         placeholder="UICTO/CYB/2024/001"
+                         required
+                         aria-required="true" />
+                </div>
+
+                <!-- Year / Department — two columns -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="level">Level</label>
+                    <select id="level" name="level" class="form-select"
+                            required aria-required="true">
+                      <option value="">Select level</option>
+                      <option value="100">100 Level</option>
+                      <option value="200">200 Level</option>
+                      <option value="300">300 Level</option>
+                      <option value="400">400 Level</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="department">Department</label>
+                    <select id="department" name="department" class="form-select"
+                            required aria-required="true">
+                      <option value="">Select department</option>
+                      <option value="cybersecurity">Cybersecurity</option>
+                      <option value="networking">Networking</option>
+                      <option value="software">Software Engineering</option>
+                      <option value="data">Data Science</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Motivation -->
+                <div class="form-group">
+                  <label class="form-label" for="motivation">
+                    Why do you want to join ACS? (optional)
+                  </label>
+                  <textarea id="motivation"
+                            name="motivation"
+                            class="form-textarea"
+                            placeholder="Tell us your motivation, what you hope to learn, or any skills you'd like to contribute..."
+                            aria-label="Your motivation for joining"></textarea>
+                </div>
+
+                <!-- Git experience (relevant to this course) -->
+                <div class="form-group">
+                  <label class="form-label" for="gitLevel">Git / Version Control Experience</label>
+                  <select id="gitLevel" name="gitLevel" class="form-select">
+                    <option value="">Select your level</option>
+                    <option value="none">Complete beginner — just installed Git</option>
+                    <option value="basic">Basic — know add, commit, push</option>
+                    <option value="intermediate">Intermediate — use branches and PRs</option>
+                    <option value="advanced">Advanced — hooks, rebase, filter-repo</option>
+                  </select>
+                </div>
+
+                <!-- Error message area (shown by JS on validation failure) -->
+                <div id="formError"
+                     role="alert"
+                     aria-live="assertive"
+                     style="display:none;
+                            color:var(--clr-orange);
+                            font-family:var(--font-code);
+                            font-size:0.8rem;
+                            margin-bottom:1rem;
+                            padding:10px;
+                            background:var(--clr-orange-dim);
+                            border-radius:var(--radius-sm);
+                            border:1px solid rgba(255,107,53,0.3);">
+                </div>
+
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-green" style="width:100%;justify-content:center;">
+                  <i class="fas fa-shield-halved" aria-hidden="true"></i>
+                  Submit Application
+                </button>
+
+              </form>
+
+              <!-- Success message (hidden until JS shows it after successful submit) -->
+              <div class="form-success" id="formSuccess" role="status" aria-live="polite">
+                <div class="form-success__icon">✓</div>
+                <div class="form-success__title">Application Received!</div>
+                <p style="color:var(--clr-text-muted);margin:0.5rem 0 1rem;font-size:0.9rem;">
+                  We'll review your application and send a confirmation to your
+                  student email within 48 hours.
+                </p>
+                <div class="form-success__text">
+                  git commit -m "feat(members): add new ACS member"
+                </div>
+              </div>
+
+            </div><!-- /form-card -->
+          </div><!-- /join__form-wrap -->
+
+          <!-- RIGHT COLUMN — Contact Information -->
+          <div class="join__info reveal">
+            <h3 style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;
+                       color:var(--clr-heading);margin-bottom:1.5rem;">
+              Get in Touch
+            </h3>
+
+            <!-- Contact cards -->
+            <div class="contact-card">
+              <div class="contact-card__icon" style="background:var(--clr-cyan-dim);">
+                <i class="fas fa-envelope" style="color:var(--clr-cyan);" aria-hidden="true"></i>
+              </div>
+              <div>
+                <div class="contact-card__label">Email</div>
+                <a href="mailto:acs@uicto.edu.ng" class="contact-card__value"
+                   style="color:var(--clr-cyan);">
+                  acss@uicto.edu.ng
+                </a>
+              </div>
+            </div>
+
+            <div class="contact-card">
+              <div class="contact-card__icon" style="background:var(--clr-green-dim);">
+                <i class="fas fa-location-dot" style="color:var(--clr-green);" aria-hidden="true"></i>
+              </div>
+              <div>
+                <div class="contact-card__label">Location</div>
+                <div class="contact-card__value">
+                  Lab 3, ICT Building<br>
+                  UICTO, Oferekpe, Ebonyi State, Nigeria.
+                </div>
+              </div>
+            </div>
+
+            <div class="contact-card">
+              <div class="contact-card__icon" style="background:var(--clr-purple-dim);">
+                <i class="fas fa-clock" style="color:var(--clr-purple);" aria-hidden="true"></i>
+              </div>
+              <div>
+                <div class="contact-card__label">Weekly Meeting</div>
+                <div class="contact-card__value">
+                  Every Thursday — 4:00 PM<br>
+                  ICT Hall, UICTO perm site.
+                </div>
+              </div>
+            </div>
+
+            <div class="contact-card">
+              <div class="contact-card__icon" style="background:var(--clr-orange-dim);">
+                <i class="fab fa-github" style="color:var(--clr-orange);" aria-hidden="true"></i>
+              </div>
+              <div>
+                <div class="contact-card__label">GitHub Organisation</div>
+                <a href="https://github.com" target="_blank" rel="noopener"
+                   class="contact-card__value" style="color:var(--clr-orange);">
+                  github.com/ACS-UICTO
+                </a>
+              </div>
+            </div>
+
+            <!-- Social media links -->
+            <h4 style="font-family:var(--font-code);font-size:0.72rem;
+                       color:var(--clr-text-muted);letter-spacing:0.12em;
+                       text-transform:uppercase;margin:1.5rem 0 1rem;">
+              Follow Us
+            </h4>
+            <div class="social-links" role="list">
+              <a href="#" class="social-link" role="listitem"
+                 aria-label="Follow ACS on Twitter">
+                <i class="fab fa-x-twitter" aria-hidden="true"></i>
+                @ACS_UICTO
+              </a>
+              <a href="#" class="social-link" role="listitem"
+                 aria-label="Join ACS WhatsApp community">
+                <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                WhatsApp
+              </a>
+              <a href="#" class="social-link" role="listitem"
+                 aria-label="Find ACS on LinkedIn">
+                <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+                LinkedIn
+              </a>
+              <a href="#" class="social-link" role="listitem"
+                 aria-label="ACS GitHub Organisation">
+                <i class="fab fa-github" aria-hidden="true"></i>
+                GitHub
+              </a>
+            </div>
+
+            <!-- Git reminder card -->
+            <div style="margin-top:2rem;padding:1.25rem;background:var(--clr-bg-3);
+                        border:1px solid var(--clr-border);border-radius:var(--radius-lg);">
+              <p style="font-family:var(--font-code);font-size:0.72rem;
+                        color:var(--clr-text-muted);margin-bottom:0.5rem;">
+                // daily git reminder
+              </p>
+              <p style="font-family:var(--font-code);font-size:0.82rem;
+                        color:var(--clr-cyan);line-height:1.8;">
+                $ git add -p          # review every change<br>
+                $ git diff --staged   # verify before committing<br>
+                $ git commit -m "..."  # use Conventional Commits<br>
+                $ git push            # share your work
+              </p>
+            </div>
+
+          </div><!-- /join__info -->
+
+        </div><!-- /join__inner -->
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── FOOTER ──────────────────────────────────────────────────
+       Standard website footer with navigation and attribution
+       ──────────────────────────────────────────────────────────── -->
+  <footer role="contentinfo">
+    <div class="container">
+
+      <!-- Footer columns grid -->
+      <div class="footer__inner">
+
+        <!-- Brand column -->
+        <div>
+          <div class="navbar__logo" style="margin-bottom:1rem;">
+            <div class="navbar__logo-icon">⚔</div>
+            <div class="navbar__brand">
+              ACS UICTO
+              <span>Association of Cybersecurity Students</span>
+            </div>
+          </div>
+          <p class="footer__brand-desc">
+            Defending the digital frontier — one commit at a time.
+            A student-led cybersecurity association at the Ebonyi State
+            University of ICT, Oferekpe, Nigeria.
+          </p>
+          <!-- Social icons row -->
+          <div style="display:flex;gap:0.75rem;margin-top:1.25rem;" role="list">
+            <a href="#" class="member-social-link" role="listitem" aria-label="Twitter">
+              <i class="fab fa-x-twitter"></i>
+            </a>
+            <a href="#" class="member-social-link" role="listitem" aria-label="GitHub">
+              <i class="fab fa-github"></i>
+            </a>
+            <a href="#" class="member-social-link" role="listitem" aria-label="LinkedIn">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="#" class="member-social-link" role="listitem" aria-label="WhatsApp">
+              <i class="fab fa-whatsapp"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick Links column -->
+        <nav class="footer-col" aria-label="Quick links">
+          <div class="footer-col__title">Quick Links</div>
+          <a href="#home">Home</a>
+          <a href="#about">About ACS</a>
+          <a href="#git-concepts">Git Concepts</a>
+          <a href="#events">Events</a>
+          <a href="#members">Team</a>
+          <a href="#join">Join Us</a>
+        </nav>
+
+        <!-- Git Resources column -->
+        <nav class="footer-col" aria-label="Git resources">
+          <div class="footer-col__title">Git Resources</div>
+          <a href="https://git-scm.com/doc" target="_blank" rel="noopener">
+            Git Documentation
+          </a>
+          <a href="https://pre-commit.com" target="_blank" rel="noopener">
+            pre-commit.com
+          </a>
+          <a href="https://github.com/gitleaks/gitleaks" target="_blank" rel="noopener">
+            gitleaks
+          </a>
+          <a href="https://conventionalcommits.org" target="_blank" rel="noopener">
+            Conventional Commits
+          </a>
+          <a href="https://gitignore.io" target="_blank" rel="noopener">
+            gitignore.io Generator
+          </a>
+        </nav>
+
+        <!-- CYB-100 column -->
+        <nav class="footer-col" aria-label="Course modules">
+          <div class="footer-col__title">CYB-100 Modules</div>
+          <a href="#">Module 1 — Intro to VCS</a>
+          <a href="#">Module 2 — Git Basics</a>
+          <a href="#">Module 3 — Audit Trails</a>
+          <a href="#">Module 4 — Secrets Mgmt</a>
+          <a href="#">Module 5 — Branching</a>
+        </nav>
+
+      </div><!-- /footer__inner -->
+
+      <!-- Footer bottom bar -->
+      <div class="footer__bottom">
+        <p class="footer__bottom-text">
+          © 2025 Association of Cybersecurity Students (ACS), UICTO.
+          Patron: Mr Nwebonyi Harrison.
+        </p>
+        <!-- Fun git commit reference in the footer -->
+        <div class="footer__git-commit" aria-label="Latest website commit">
+          <i class="fas fa-code-branch" aria-hidden="true"></i>
+          <span class="hash">f9a3c11</span>
+          feat(footer): ship final website to production
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ─── SCROLL TO TOP BUTTON ─────────────────────────────────── -->
+  <button class="scroll-top" id="scrollTopBtn"
+          aria-label="Scroll back to top of page"
+          title="Back to top">
+    <i class="fas fa-arrow-up" aria-hidden="true"></i>
+  </button>
+
+  <!-- ─── GIT COMMAND MODAL ────────────────────────────────────────
+       A popup modal that shows step-by-step guides for each git command.
+       JS fills the content dynamically based on which card was clicked.
+       ──────────────────────────────────────────────────────────── -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog"
+       aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+
+      <!-- Close button -->
+      <button class="modal__close" id="modalClose" aria-label="Close modal">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
+
+      <!-- Modal content is injected by JS based on which command was clicked -->
+      <div id="modalContent">
+        <!-- Filled by JavaScript -->
+      </div>
+
+    </div>
+  </div>
+  <!--link javascript-->
+  <script src="script.js"></script>
+
+</body>
+</html>
